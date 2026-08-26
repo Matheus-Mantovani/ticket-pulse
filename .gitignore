@@ -1,0 +1,14 @@
+# Environment variables
+.env
+
+# Project documentation & master spec (requested to be ignored)
+PLAN.md
+*.docx
+
+# Deno & Coverage
+cov_profile/
+.deno/
+
+# OS & IDE temporary files
+.DS_Store
+*.log
