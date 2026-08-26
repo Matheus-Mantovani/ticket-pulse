@@ -2,7 +2,7 @@ import "npm:dotenv/config";
 import app from "./app.ts";
 import { connectDatabase, disconnectDatabase } from "./config/database.ts";
 
-const PORT = Number(process.env.PORT) || 3000;
+const PORT = Number(Deno.env.get("PORT")) || 3000;
 
 async function bootstrap() {
   try {

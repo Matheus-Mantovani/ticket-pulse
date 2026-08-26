@@ -1,7 +1,7 @@
 import mongoose, { ClientSession } from "npm:mongoose";
 
 export async function connectDatabase(): Promise<void> {
-  const mongoUri = process.env.MONGO_URI;
+  const mongoUri = Deno.env.get("MONGO_URI");
 
   if (!mongoUri) {
     throw new Error("❌ [Database Error] MONGO_URI is not defined in environment variables");
