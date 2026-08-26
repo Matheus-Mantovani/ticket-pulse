@@ -1,6 +1,6 @@
-import express, { Express, Request, Response } from "npm:express";
-import cors from "npm:cors";
-import morgan from "npm:morgan";
+import express, { Express, Request, Response } from "express";
+import cors from "cors";
+import morgan from "morgan";
 
 const app: Express = express();
 

@@ -1,4 +1,4 @@
-import mongoose, { ClientSession } from "npm:mongoose";
+import mongoose, { ClientSession } from "mongoose";
 
 export async function connectDatabase(): Promise<void> {
   const mongoUri = Deno.env.get("MONGO_URI");
@@ -11,7 +11,7 @@ export async function connectDatabase(): Promise<void> {
     console.log("🍃 [Database] Connected successfully to MongoDB Atlas Cluster");
   });
 
-  mongoose.connection.on("error", (err) => {
+  mongoose.connection.on("error", (err: Error) => {
     console.error("❌ [Database Connection Error]:", err);
   });
 

@@ -1,4 +1,4 @@
-import "npm:dotenv/config";
+import "dotenv/config";
 import app from "./app.ts";
 import { connectDatabase, disconnectDatabase } from "./config/database.ts";
 
@@ -16,7 +16,7 @@ async function bootstrap() {
     });
 
     // Graceful Shutdown handlers
-    const shutdown = async (signal: string) => {
+    const shutdown = (signal: string) => {
       console.log(`\n🛑 [Server] Received ${signal}. Initiating graceful shutdown...`);
       server.close(async () => {
         await disconnectDatabase();
