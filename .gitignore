@@ -3,6 +3,7 @@
 
 # Project documentation & master spec (requested to be ignored)
 PLAN.md
+walkthrough.md
 *.docx
 
 # Deno & Coverage
