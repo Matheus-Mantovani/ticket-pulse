@@ -1,4 +1,4 @@
-import { assertEquals, assertExists } from "jsr:@std/assert";
+import { assertEquals, assertExists } from "@std/assert";
 import { app, supertest, setupTestDB, teardownTestDB, clearDatabase, createTestUser } from "./helpers.ts";
 import { createEventService } from "../src/services/eventService.ts";
 
@@ -11,7 +11,7 @@ Deno.test({
     await clearDatabase();
 
     let userToken: string;
-    let userId: string;
+    let _userId: string;
     let adminId: string;
     let testEventId: string;
 
@@ -20,7 +20,7 @@ Deno.test({
       const adminCreds = await createTestUser("ADMIN", "ticket.admin@test.com");
 
       userToken = userCreds.accessToken;
-      userId = userCreds.user._id.toString();
+      _userId = userCreds.user._id.toString();
       adminId = adminCreds.user._id.toString();
 
       // Criar evento de teste limitado a 1 ingresso
