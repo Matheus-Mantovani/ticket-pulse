@@ -50,8 +50,9 @@ export function generateRefreshToken(payload: RefreshTokenPayload): string {
 export function verifyAccessToken(token: string): AccessTokenPayload {
   try {
     return jwt.verify(token, getJwtSecret()) as AccessTokenPayload;
-  } catch (error: any) {
-    if (error.name === "TokenExpiredError") {
+  } catch (error: unknown) {
+    const err = error as { name?: string };
+    if (err.name === "TokenExpiredError") {
       throw throwlhos.err_unauthorized("Access token has expired");
     }
     throw throwlhos.err_unauthorized("Invalid access token");
@@ -64,8 +65,9 @@ export function verifyAccessToken(token: string): AccessTokenPayload {
 export function verifyRefreshToken(token: string): RefreshTokenPayload {
   try {
     return jwt.verify(token, getJwtRefreshSecret()) as RefreshTokenPayload;
-  } catch (error: any) {
-    if (error.name === "TokenExpiredError") {
+  } catch (error: unknown) {
+    const err = error as { name?: string };
+    if (err.name === "TokenExpiredError") {
       throw throwlhos.err_unauthorized("Refresh token has expired");
     }
     throw throwlhos.err_unauthorized("Invalid refresh token");

@@ -56,11 +56,12 @@ const userSchema = new Schema<IUser>(
 );
 
 userSchema.set("toJSON", {
-  transform: (_doc, ret: Record<string, any>) => {
-    delete ret.password;
-    delete ret.refreshToken;
-    delete ret.__v;
-    return ret;
+  transform: (_doc, ret) => {
+    const obj = ret as unknown as Record<string, unknown>;
+    delete obj.password;
+    delete obj.refreshToken;
+    delete obj.__v;
+    return obj;
   },
 });
 

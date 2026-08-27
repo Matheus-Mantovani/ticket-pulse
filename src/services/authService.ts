@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import throwlhosPkg from "throwlhos";
-import { User, IUser, UserRole, UserDTO, toUserDTO } from "../models/User.ts";
+import { User, UserRole, UserDTO, toUserDTO } from "../models/User.ts";
 import {
   generateAccessToken,
   generateRefreshToken,

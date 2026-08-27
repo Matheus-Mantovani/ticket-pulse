@@ -10,6 +10,7 @@
     "npm:express@*": "4.22.2",
     "npm:express@^4.19.2": "4.22.2",
     "npm:jsonwebtoken@^9.0.2": "9.0.3",
+    "npm:mongoose@*": "8.24.3",
     "npm:mongoose@^8.3.0": "8.24.3",
     "npm:morgan@*": "1.11.0",
     "npm:morgan@^1.10.0": "1.11.0",
