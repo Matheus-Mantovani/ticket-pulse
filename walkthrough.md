@@ -25,7 +25,7 @@ Este documento apresenta o detalhamento das alterações efetuadas e as evidênc
    - Criada interface `ResponserResponse` e helpers de padronização de contrato JSON de resposta HTTP.
 
 4. **`src/middlewares/errorHandler.ts`**:
-   - Criado o middleware global de tratamento de exceções para capturar erros lançados por `throwlhos` e formatá-los no padrão do `responser`.
+   - Criado e refatorado o middleware global de tratamento de exceções para capturar erros lançados por `throwlhos` e erros de runtime, formatando-os dinamicamente no padrão do `responser` sem código hardcoded.
 
 5. **`src/app.ts`**:
    - Registrados os middlewares `responser`, `throwlhos.middleware` e `errorHandler`.
