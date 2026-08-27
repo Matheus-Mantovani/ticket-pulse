@@ -2,7 +2,7 @@ import "dotenv/config";
 import mongoose from "mongoose";
 import supertest from "supertest";
 import app from "../src/app.ts";
-import { connectDatabase, disconnectDatabase } from "../src/config/database.ts";
+import { disconnectDatabase } from "../src/config/database.ts";
 import { User, IUser } from "../src/models/User.ts";
 import { Event } from "../src/models/Event.ts";
 import { Ticket } from "../src/models/Ticket.ts";
@@ -11,10 +11,23 @@ import { generateAccessToken, generateRefreshToken } from "../src/utils/jwt.ts";
 export { app, supertest };
 
 /**
- * Conecta ao MongoDB Atlas para a execução dos testes.
+ * Conecta exclusivamente à database isolada de testes ('ticket_pulse_tests').
  */
 export async function setupTestDB(): Promise<void> {
-  await connectDatabase();
+  const envTestUri = Deno.env.get("MONGO_URI_TEST");
+  const mainUri = Deno.env.get("MONGO_URI");
+
+  const testUri =
+    envTestUri ||
+    (mainUri ? mainUri.replace("/ticket_pulse", "/ticket_pulse_tests") : undefined);
+
+  if (!testUri) {
+    throw new Error("MONGO_URI_TEST or MONGO_URI is not configured in environment");
+  }
+
+  if (mongoose.connection.readyState === 0) {
+    await mongoose.connect(testUri);
+  }
 }
 
 /**
@@ -25,7 +38,7 @@ export async function teardownTestDB(): Promise<void> {
 }
 
 /**
- * Limpa todas as coleções de teste (Users, Events, Tickets).
+ * Limpa todas as coleções do banco de testes ('ticket_pulse_tests').
  */
 export async function clearDatabase(): Promise<void> {
   if (mongoose.connection.readyState === 1) {
