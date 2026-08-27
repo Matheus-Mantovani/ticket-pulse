@@ -15,7 +15,9 @@
     "jsonwebtoken": "npm:jsonwebtoken@^9.0.2",
     "@types/jsonwebtoken": "npm:@types/jsonwebtoken@^9.0.6",
     "bcryptjs": "npm:bcryptjs@^2.4.3",
-    "@types/bcryptjs": "npm:@types/bcryptjs@^2.4.6"
+    "@types/bcryptjs": "npm:@types/bcryptjs@^2.4.6",
+    "supertest": "npm:supertest@^7.0.0",
+    "@types/supertest": "npm:@types/supertest@^6.0.2"
   },
   "tasks": {
     "dev": "deno run --allow-net --allow-read --allow-env --allow-sys --watch src/main.ts",

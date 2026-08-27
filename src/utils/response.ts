@@ -12,7 +12,7 @@ export interface StandardApiResponse<T = unknown> {
 /**
  * Interface estendida do Express Response para incluir métodos dinâmicos injetados pelo responser.
  */
-export interface ResponserResponse extends Response {
+export type ResponserResponse = Response & {
   send_ok?: (message?: string, content?: unknown) => void;
   send_created?: (message?: string, content?: unknown) => void;
   send_badRequest?: (message?: string, errors?: unknown) => void;
@@ -20,7 +20,7 @@ export interface ResponserResponse extends Response {
   send_forbidden?: (message?: string, errors?: unknown) => void;
   send_notFound?: (message?: string, errors?: unknown) => void;
   send_internalServerError?: (message?: string, errors?: unknown) => void;
-}
+};
 
 /**
  * Formata manualmente a resposta HTTP no padrão responser caso necessário.
