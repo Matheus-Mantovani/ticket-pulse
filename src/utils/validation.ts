@@ -51,7 +51,7 @@ export function validatePositiveNumber(value: unknown, fieldName: string): void 
  */
 export function validateFutureDate(dateInput: string | Date, fieldName: string): void {
   const parsedDate = new Date(dateInput);
-  if (isNaN(parsedDate.getTime()) || !isness.date(dateInput)) {
+  if (isNaN(parsedDate.getTime()) || !isness.date(parsedDate)) {
     throw throwlhos.err_badRequest(`Field '${fieldName}' must be a valid date`);
   }
 
