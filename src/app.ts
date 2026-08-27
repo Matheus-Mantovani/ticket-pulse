@@ -4,6 +4,7 @@ import morgan from "morgan";
 import responserPkg from "responser";
 import throwlhosPkg from "throwlhos";
 import { errorHandler } from "./middlewares/errorHandler.ts";
+import authRoutes from "./routes/authRoutes.ts";
 
 const responser = responserPkg.default || responserPkg;
 const throwlhos = throwlhosPkg.default || throwlhosPkg;
@@ -25,6 +26,9 @@ app.get("/health", (_req: Request, res: Response) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// API Routes
+app.use("/api/auth", authRoutes);
 
 // Centralized Error Handling Middleware (must be registered last)
 app.use(errorHandler);
