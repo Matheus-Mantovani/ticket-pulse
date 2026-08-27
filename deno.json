@@ -7,7 +7,11 @@
     "morgan": "npm:morgan@^1.10.0",
     "@types/morgan": "npm:@types/morgan@^1.9.9",
     "mongoose": "npm:mongoose@^8.3.0",
-    "dotenv/config": "npm:dotenv@^16.4.5/config"
+    "dotenv/config": "npm:dotenv@^16.4.5/config",
+    "responser": "npm:responser@^2.5.6",
+    "throwlhos": "npm:throwlhos@^1.1.0",
+    "request-check": "npm:request-check@^1.6.2",
+    "@zarco/isness": "jsr:@zarco/isness@^0.1.18"
   },
   "tasks": {
     "dev": "deno run --allow-net --allow-read --allow-env --allow-sys --watch src/main.ts",
