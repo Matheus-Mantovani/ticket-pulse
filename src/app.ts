@@ -6,6 +6,7 @@ import throwlhosPkg from "throwlhos";
 import { errorHandler } from "./middlewares/errorHandler.ts";
 import authRoutes from "./routes/authRoutes.ts";
 import eventRoutes from "./routes/eventRoutes.ts";
+import ticketRoutes from "./routes/ticketRoutes.ts";
 
 const responser = responserPkg.default || responserPkg;
 const throwlhos = throwlhosPkg.default || throwlhosPkg;
@@ -31,6 +32,7 @@ app.get("/health", (_req: Request, res: Response) => {
 // API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/events", eventRoutes);
+app.use("/api/tickets", ticketRoutes);
 
 // Centralized Error Handling Middleware (must be registered last)
 app.use(errorHandler);
