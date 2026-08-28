@@ -1,0 +1,568 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "TicketPulse API",
+    "version": "1.0.0",
+    "description": "API RESTful para gestão de eventos e compra atômica de ingressos construída com Deno 2, Express, MongoDB Atlas e Mongoose."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor de Desenvolvimento Local"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Health",
+      "description": "Verificação de status do serviço"
+    },
+    {
+      "name": "Auth",
+      "description": "Endpoints de autenticação, usuários e tokens JWT"
+    },
+    {
+      "name": "Events",
+      "description": "Endpoints de gestão e consulta de eventos"
+    },
+    {
+      "name": "Tickets",
+      "description": "Endpoints para compra atômica e consulta de ingressos"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Informe o token JWT obtido no login no formato: Bearer <token>"
+      }
+    },
+    "schemas": {
+      "UserDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "609052d091e0c48fa44184f9" },
+          "name": { "type": "string", "example": "João Silva" },
+          "email": { "type": "string", "format": "email", "example": "joao@example.com" },
+          "role": { "type": "string", "enum": ["ADMIN", "USER"], "example": "USER" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "RegisterInput": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+          "name": { "type": "string", "example": "João Silva" },
+          "email": { "type": "string", "format": "email", "example": "joao@example.com" },
+          "password": { "type": "string", "format": "password", "example": "senhaSegura123" },
+          "role": { "type": "string", "enum": ["ADMIN", "USER"], "default": "USER", "example": "USER" }
+        }
+      },
+      "LoginInput": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": { "type": "string", "format": "email", "example": "joao@example.com" },
+          "password": { "type": "string", "format": "password", "example": "senhaSegura123" }
+        }
+      },
+      "RefreshInput": {
+        "type": "object",
+        "required": ["refreshToken"],
+        "properties": {
+          "refreshToken": { "type": "string", "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." }
+        }
+      },
+      "AuthResponseData": {
+        "type": "object",
+        "properties": {
+          "user": { "$ref": "#/components/schemas/UserDTO" },
+          "token": { "type": "string", "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." },
+          "refreshToken": { "type": "string", "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." }
+        }
+      },
+      "EventDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "507f1f77bcf86cd799439099" },
+          "title": { "type": "string", "example": "Rock in Rio 2026" },
+          "description": { "type": "string", "example": "Festival Internacional de Música" },
+          "date": { "type": "string", "format": "date-time", "example": "2026-11-20T20:00:00.000Z" },
+          "location": { "type": "string", "example": "Rio de Janeiro, RJ" },
+          "category": { "type": "string", "enum": ["CONCERT", "CONFERENCE", "SPORTS", "THEATER", "OTHER"], "example": "CONCERT" },
+          "price": { "type": "number", "example": 350.0 },
+          "totalTickets": { "type": "integer", "example": 1000 },
+          "availableTickets": { "type": "integer", "example": 999 },
+          "status": { "type": "string", "enum": ["ACTIVE", "CANCELLED", "COMPLETED"], "example": "ACTIVE" },
+          "createdBy": { "type": "string", "example": "609052d091e0c48fa44184f9" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "CreateEventInput": {
+        "type": "object",
+        "required": ["title", "date", "location", "price", "totalTickets"],
+        "properties": {
+          "title": { "type": "string", "example": "Rock in Rio 2026" },
+          "description": { "type": "string", "example": "Festival Internacional de Música" },
+          "date": { "type": "string", "format": "date-time", "example": "2026-11-20T20:00:00.000Z" },
+          "location": { "type": "string", "example": "Rio de Janeiro, RJ" },
+          "category": { "type": "string", "enum": ["CONCERT", "CONFERENCE", "SPORTS", "THEATER", "OTHER"], "default": "OTHER", "example": "CONCERT" },
+          "price": { "type": "number", "example": 350.0 },
+          "totalTickets": { "type": "integer", "example": 1000 }
+        }
+      },
+      "UpdateEventInput": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "example": "Rock in Rio 2026 - Edição Especial" },
+          "description": { "type": "string", "example": "Nova descrição atualizada" },
+          "date": { "type": "string", "format": "date-time" },
+          "location": { "type": "string", "example": "Barra da Tijuca, RJ" },
+          "category": { "type": "string", "enum": ["CONCERT", "CONFERENCE", "SPORTS", "THEATER", "OTHER"] },
+          "price": { "type": "number", "example": 400.0 },
+          "totalTickets": { "type": "integer", "example": 1200 }
+        }
+      },
+      "PaginatedEvents": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/EventDTO" }
+          },
+          "total": { "type": "integer", "example": 1 },
+          "page": { "type": "integer", "example": 1 },
+          "limit": { "type": "integer", "example": 10 },
+          "totalPages": { "type": "integer", "example": 1 }
+        }
+      },
+      "TicketDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "609052d091e0c48fa44184aa" },
+          "eventId": { "type": "string", "example": "507f1f77bcf86cd799439099" },
+          "userId": { "type": "string", "example": "609052d091e0c48fa44184f9" },
+          "ticketCode": { "type": "string", "example": "TCK-A1B2C3D4" },
+          "purchasePrice": { "type": "number", "example": 350.0 },
+          "purchasedAt": { "type": "string", "format": "date-time" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "PurchaseTicketInput": {
+        "type": "object",
+        "required": ["eventId"],
+        "properties": {
+          "eventId": { "type": "string", "example": "507f1f77bcf86cd799439099" }
+        }
+      },
+      "StandardResponse": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "example": "OK" },
+          "code": { "type": "integer", "example": 200 },
+          "success": { "type": "boolean", "example": true },
+          "message": { "type": "string", "example": "Operation executed successfully" },
+          "data": { "type": "object" }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "example": "BAD_REQUEST" },
+          "code": { "type": "integer", "example": 400 },
+          "success": { "type": "boolean", "example": false },
+          "message": { "type": "string", "example": "Invalid request payload" }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "Verifica o status de saúde da aplicação",
+        "responses": {
+          "200": {
+            "description": "API operando normalmente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "ok" },
+                    "service": { "type": "string", "example": "TicketPulse API" },
+                    "timestamp": { "type": "string", "format": "date-time" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Registra um novo usuário no sistema",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RegisterInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário registrado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/StandardResponse" },
+                    {
+                      "properties": {
+                        "data": { "$ref": "#/components/schemas/AuthResponseData" }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados de registro inválidos ou e-mail duplicado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Autentica usuário e gera tokens de acesso",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/StandardResponse" },
+                    {
+                      "properties": {
+                        "data": { "$ref": "#/components/schemas/AuthResponseData" }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Renova o token de acesso utilizando um Refresh Token válido",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RefreshInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Novo Access Token gerado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/StandardResponse" },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "token": { "type": "string" }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Refresh Token inválido ou expirado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Retorna o perfil do usuário autenticado",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Perfil retornado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/StandardResponse" },
+                    {
+                      "properties": {
+                        "data": { "$ref": "#/components/schemas/UserDTO" }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado / Token ausente ou inválido",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/events": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Listagem pública e paginada de eventos ativos",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 }, "description": "Número da página" },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 10 }, "description": "Itens por página" },
+          { "name": "search", "in": "query", "schema": { "type": "string" }, "description": "Filtro por título" },
+          { "name": "category", "in": "query", "schema": { "type": "string", "enum": ["CONCERT", "CONFERENCE", "SPORTS", "THEATER", "OTHER"] }, "description": "Filtro por categoria" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de eventos retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/StandardResponse" },
+                    {
+                      "properties": {
+                        "data": { "$ref": "#/components/schemas/PaginatedEvents" }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Events"],
+        "summary": "Cria um novo evento (Exige perfil ADMIN)",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateEventInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Evento criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/StandardResponse" },
+                    {
+                      "properties": {
+                        "data": { "$ref": "#/components/schemas/EventDTO" }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": { "description": "Dados de criação inválidos" },
+          "401": { "description": "Token não fornecido" },
+          "403": { "description": "Acesso negado (apenas ADMIN)" }
+        }
+      }
+    },
+    "/api/events/{id}": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Retorna os detalhes de um evento específico por ID",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" }, "description": "ID do evento" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Evento encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/StandardResponse" },
+                    {
+                      "properties": {
+                        "data": { "$ref": "#/components/schemas/EventDTO" }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": { "description": "Evento não encontrado" }
+        }
+      },
+      "put": {
+        "tags": ["Events"],
+        "summary": "Atualiza um evento existente (Exige perfil ADMIN)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" }, "description": "ID do evento" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateEventInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Evento atualizado com sucesso" },
+          "400": { "description": "Payload inválido" },
+          "403": { "description": "Acesso negado (apenas ADMIN)" },
+          "404": { "description": "Evento não encontrado" }
+        }
+      },
+      "delete": {
+        "tags": ["Events"],
+        "summary": "Deleta um evento (Exige perfil ADMIN)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" }, "description": "ID do evento" }
+        ],
+        "responses": {
+          "200": { "description": "Evento removido com sucesso" },
+          "403": { "description": "Acesso negado (apenas ADMIN)" },
+          "404": { "description": "Evento não encontrado" }
+        }
+      }
+    },
+    "/api/tickets/purchase": {
+      "post": {
+        "tags": ["Tickets"],
+        "summary": "Realiza a compra atômica de um ingresso para o evento",
+        "description": "Executa uma transação ACID no MongoDB decrementando o estoque e emitindo o bilhete.",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PurchaseTicketInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ingresso comprado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/StandardResponse" },
+                    {
+                      "properties": {
+                        "data": { "$ref": "#/components/schemas/TicketDTO" }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": { "description": "Evento esgotado ou requisição inválida" },
+          "401": { "description": "Token não fornecido" },
+          "404": { "description": "Evento não encontrado" }
+        }
+      }
+    },
+    "/api/tickets/my-tickets": {
+      "get": {
+        "tags": ["Tickets"],
+        "summary": "Retorna a lista de ingressos adquiridos pelo usuário autenticado",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de ingressos retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/StandardResponse" },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": { "$ref": "#/components/schemas/TicketDTO" }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": { "description": "Token não fornecido" }
+        }
+      }
+    }
+  }
+}

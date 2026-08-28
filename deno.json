@@ -16,6 +16,8 @@
     "@types/jsonwebtoken": "npm:@types/jsonwebtoken@^9.0.6",
     "bcryptjs": "npm:bcryptjs@^2.4.3",
     "@types/bcryptjs": "npm:@types/bcryptjs@^2.4.6",
+    "swagger-ui-express": "npm:swagger-ui-express@^5.0.0",
+    "@types/swagger-ui-express": "npm:@types/swagger-ui-express@^4.1.6",
     "supertest": "npm:supertest@^7.0.0",
     "@types/supertest": "npm:@types/supertest@^6.0.2",
     "@std/assert": "jsr:@std/assert@^1.0.0"

@@ -3,6 +3,8 @@ import cors from "cors";
 import morgan from "morgan";
 import responserPkg from "responser";
 import throwlhosPkg from "throwlhos";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./docs/swagger.json" with { type: "json" };
 import { errorHandler } from "./middlewares/errorHandler.ts";
 import authRoutes from "./routes/authRoutes.ts";
 import eventRoutes from "./routes/eventRoutes.ts";
@@ -28,6 +30,9 @@ app.get("/health", (_req: Request, res: Response) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// Swagger UI Documentation Route
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // API Routes
 app.use("/api/auth", authRoutes);
