@@ -97,7 +97,7 @@ A aplicação integra rigorosamente os 5 pacotes obrigatórios da especificaçã
 | **`npm:morgan`** | Logging detalhado de todas as requisições HTTP recebidas no terminal. | [`src/app.ts`](src/app.ts)<br>`app.use(morgan("dev"));` |
 | **`npm:responser`** | Padronização do contrato de respostas JSON (`status`, `code`, `success`, `message`, `data`). | [`src/utils/response.ts`](src/utils/response.ts)<br>Middlewares globais e respostas de controllers. |
 | **`npm:request-check`** | Validação estrita de presença e obrigatoriedade de campos no payload HTTP. | [`src/utils/validation.ts`](src/utils/validation.ts)<br>`checkRequestFields(req.body, ["email", "password"])` |
-| **`npm:throwlhos`** | Lançamento centralizado de exceções HTTP tratadas pelo `errorHandler`. | [`src/middlewares/errorHandler.ts`](src/middlewares/errorHandler.ts)<br>`throwlhos.badRequest(...)`, `throwlhos.unauthorized(...)` |
+| **`npm:throwlhos`** | Lançamento e captura centralizada de exceções HTTP (`badRequest`, `unauthorized`, `notFound`). | [`src/utils/validation.ts`](src/utils/validation.ts) & [`src/middlewares/errorHandler.ts`](src/middlewares/errorHandler.ts)<br>`throw throwlhos.err_badRequest(...)` |
 | **`jsr:@zarco/isness`** | Checagem e asserção de tipos (validação de e-mail, datas futuras, números positivos). | [`src/utils/validation.ts`](src/utils/validation.ts)<br>`isness(email).isEmail()`, `isness(price).isPositiveNumber()` |
 
 ---
