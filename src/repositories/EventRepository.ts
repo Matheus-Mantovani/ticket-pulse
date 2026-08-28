@@ -1,4 +1,4 @@
-import { Event, IEvent } from "../models/Event.ts";
+import { EventModel, IEvent } from "../models/Event.ts";
 import {
   IEventRepository,
   EventFilter,
@@ -8,7 +8,7 @@ import {
 
 export class EventRepository implements IEventRepository {
   async create(eventData: Partial<IEvent>): Promise<IEvent> {
-    const event = new Event(eventData);
+    const event = new EventModel(eventData);
     return await event.save();
   }
 
@@ -28,26 +28,26 @@ export class EventRepository implements IEventRepository {
 
     const skip = (pagination.page - 1) * pagination.limit;
     const [events, total] = await Promise.all([
-      Event.find(query).skip(skip).limit(pagination.limit).sort({ date: 1 }),
-      Event.countDocuments(query),
+      EventModel.find(query).skip(skip).limit(pagination.limit).sort({ date: 1 }),
+      EventModel.countDocuments(query),
     ]);
 
     return { events, total };
   }
 
   async findById(id: string): Promise<IEvent | null> {
-    return await Event.findById(id);
+    return await EventModel.findById(id);
   }
 
   async update(id: string, eventData: Partial<IEvent>): Promise<IEvent | null> {
-    return await Event.findByIdAndUpdate(id, eventData, {
+    return await EventModel.findByIdAndUpdate(id, eventData, {
       new: true,
       runValidators: true,
     });
   }
 
   async delete(id: string): Promise<boolean> {
-    const result = await Event.findByIdAndDelete(id);
+    const result = await EventModel.findByIdAndDelete(id);
     return result !== null;
   }
 }

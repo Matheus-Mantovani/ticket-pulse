@@ -1,6 +1,10 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export type UserRole = "ADMIN" | "USER";
+export const UserRole = {
+  ADMIN: "ADMIN" as UserRole,
+  USER: "USER" as UserRole,
+};
 
 export interface IUser extends Document {
   name: string;
@@ -67,13 +71,35 @@ userSchema.set("toJSON", {
 
 export function toUserDTO(user: IUser): UserDTO {
   return {
-    id: user._id.toString(),
+    id: user._id ? user._id.toString() : "",
     name: user.name,
     email: user.email,
-    role: user.role,
+    role: user.role as UserRole,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   };
 }
 
-export const User = mongoose.model<IUser>("User", userSchema);
+export class User {
+  _id!: mongoose.Types.ObjectId;
+  name!: string;
+  email!: string;
+  role!: UserRole;
+  createdAt!: Date;
+  updatedAt!: Date;
+
+  toUserDTO(): UserDTO {
+    return {
+      id: this._id ? this._id.toString() : "",
+      name: this.name,
+      email: this.email,
+      role: this.role,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  }
+}
+
+userSchema.loadClass(User);
+
+export const UserModel = mongoose.model<IUser>("User", userSchema);

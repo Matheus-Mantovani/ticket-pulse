@@ -11,7 +11,7 @@ export type EventStatus = "ACTIVE" | "CANCELLED" | "COMPLETED";
 
 export interface IEvent extends Document {
   title: string;
-  description: string;
+  description?: string | null;
   date: Date;
   location: string;
   category: EventCategory;
@@ -49,7 +49,7 @@ const eventSchema = new Schema<IEvent>(
     },
     description: {
       type: String,
-      default: "",
+      default: null,
       trim: true,
     },
     date: {
@@ -107,9 +107,9 @@ eventSchema.set("toJSON", {
 
 export function toEventDTO(event: IEvent): EventDTO {
   return {
-    id: event._id.toString(),
+    id: event._id ? event._id.toString() : "",
     title: event.title,
-    description: event.description,
+    description: event.description || "",
     date: event.date,
     location: event.location,
     category: event.category,
@@ -123,4 +123,44 @@ export function toEventDTO(event: IEvent): EventDTO {
   };
 }
 
-export const Event = mongoose.model<IEvent>("Event", eventSchema);
+export class Event {
+  _id!: mongoose.Types.ObjectId;
+  title!: string;
+  description?: string | null;
+  date!: Date;
+  location!: string;
+  category!: EventCategory;
+  price!: number;
+  totalTickets!: number;
+  availableTickets!: number;
+  status!: EventStatus;
+  createdBy!: mongoose.Types.ObjectId;
+  createdAt!: Date;
+  updatedAt!: Date;
+
+  get isAvailable(): boolean {
+    return this.availableTickets > 0 && this.status === "ACTIVE";
+  }
+
+  toEventDTO(): EventDTO {
+    return {
+      id: this._id ? this._id.toString() : "",
+      title: this.title,
+      description: this.description || "",
+      date: this.date,
+      location: this.location,
+      category: this.category,
+      price: this.price,
+      totalTickets: this.totalTickets,
+      availableTickets: this.availableTickets,
+      status: this.status,
+      createdBy: this.createdBy ? this.createdBy.toString() : "",
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  }
+}
+
+eventSchema.loadClass(Event);
+
+export const EventModel = mongoose.model<IEvent>("Event", eventSchema);

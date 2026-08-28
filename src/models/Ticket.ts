@@ -65,7 +65,7 @@ ticketSchema.set("toJSON", {
 
 export function toTicketDTO(ticket: ITicket): TicketDTO {
   return {
-    id: ticket._id.toString(),
+    id: ticket._id ? ticket._id.toString() : "",
     eventId: ticket.event ? ticket.event.toString() : "",
     userId: ticket.user ? ticket.user.toString() : "",
     ticketCode: ticket.ticketCode,
@@ -76,4 +76,30 @@ export function toTicketDTO(ticket: ITicket): TicketDTO {
   };
 }
 
-export const Ticket = mongoose.model<ITicket>("Ticket", ticketSchema);
+export class Ticket {
+  _id!: mongoose.Types.ObjectId;
+  event!: mongoose.Types.ObjectId;
+  user!: mongoose.Types.ObjectId;
+  ticketCode!: string;
+  purchasePrice!: number;
+  purchasedAt!: Date;
+  createdAt!: Date;
+  updatedAt!: Date;
+
+  toTicketDTO(): TicketDTO {
+    return {
+      id: this._id ? this._id.toString() : "",
+      eventId: this.event ? this.event.toString() : "",
+      userId: this.user ? this.user.toString() : "",
+      ticketCode: this.ticketCode,
+      purchasePrice: this.purchasePrice,
+      purchasedAt: this.purchasedAt,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  }
+}
+
+ticketSchema.loadClass(Ticket);
+
+export const TicketModel = mongoose.model<ITicket>("Ticket", ticketSchema);

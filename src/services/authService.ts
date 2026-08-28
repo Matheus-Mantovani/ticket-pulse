@@ -44,7 +44,7 @@ export class AuthService {
       name: input.name,
       email: input.email.toLowerCase(),
       password: hashedPassword,
-      role: input.role || "USER",
+      role: input.role || UserRole.USER,
     });
 
     const accessToken = generateAccessToken({

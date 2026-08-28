@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 import supertest from "supertest";
 import app from "../src/app.ts";
 import { disconnectDatabase } from "../src/config/database.ts";
-import { User, IUser } from "../src/models/User.ts";
-import { Event } from "../src/models/Event.ts";
-import { Ticket } from "../src/models/Ticket.ts";
+import { UserModel as User, IUser } from "../src/models/User.ts";
+import { EventModel as Event } from "../src/models/Event.ts";
+import { TicketModel as Ticket } from "../src/models/Ticket.ts";
 import { generateAccessToken, generateRefreshToken } from "../src/utils/jwt.ts";
 
 export { app, supertest };

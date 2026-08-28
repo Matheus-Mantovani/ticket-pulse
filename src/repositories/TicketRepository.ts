@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Ticket, ITicket } from "../models/Ticket.ts";
+import { TicketModel, ITicket } from "../models/Ticket.ts";
 import { ITicketRepository } from "./ITicketRepository.ts";
 
 export class TicketRepository implements ITicketRepository {
@@ -7,11 +7,11 @@ export class TicketRepository implements ITicketRepository {
     ticketData: Partial<ITicket>,
     session: mongoose.ClientSession
   ): Promise<ITicket> {
-    const [ticket] = await Ticket.create([ticketData], { session });
+    const [ticket] = await TicketModel.create([ticketData], { session });
     return ticket;
   }
 
   async findByUser(userId: string): Promise<ITicket[]> {
-    return await Ticket.find({ user: userId }).populate("event").sort({ purchasedAt: -1 });
+    return await TicketModel.find({ user: userId }).populate("event").sort({ purchasedAt: -1 });
   }
 }

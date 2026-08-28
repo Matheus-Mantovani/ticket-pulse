@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import throwlhosPkg from "throwlhos";
-import { Event } from "../models/Event.ts";
+import { EventModel } from "../models/Event.ts";
 import { TicketDTO, toTicketDTO } from "../models/Ticket.ts";
 import { ITicketRepository } from "../repositories/ITicketRepository.ts";
 import { TicketRepository } from "../repositories/TicketRepository.ts";
@@ -27,7 +27,7 @@ export class TicketService {
     session.startTransaction();
 
     try {
-      const event = await Event.findById(eventId).session(session);
+      const event = await EventModel.findById(eventId).session(session);
       if (!event) {
         throw throwlhos.err_notFound("Event not found");
       }
