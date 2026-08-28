@@ -94,11 +94,11 @@ A aplicação integra rigorosamente os 5 pacotes obrigatórios da especificaçã
 
 | Pacote | Função no Projeto | Arquivo de Implementação / Exemplo de Código |
 | :--- | :--- | :--- |
-| **`npm:morgan`** | Logging detalhado de todas as requisições HTTP recebidas no terminal. | `src/app.ts`<br>`app.use(morgan("dev"));` |
-| **`npm:responser`** | Padronização do contrato de respostas JSON (`status`, `code`, `success`, `message`, `data`). | `src/utils/response.ts`<br>Middlewares globais e respostas de controllers. |
-| **`npm:request-check`** | Validação estrita de presença e obrigatoriedade de campos no payload HTTP. | `src/utils/validation.ts`<br>`checkRequestFields(req.body, ["email", "password"])` |
-| **`npm:throwlhos`** | Lançamento centralizado de exceções HTTP tratadas pelo `errorHandler`. | `src/middlewares/errorHandler.ts`<br>`throwlhos.badRequest(...)`, `throwlhos.unauthorized(...)` |
-| **`jsr:@zarco/isness`** | Checagem e asserção de tipos (validação de e-mail, datas futuras, números positivos). | `src/utils/validation.ts`<br>`isness(email).isEmail()`, `isness(price).isPositiveNumber()` |
+| **`npm:morgan`** | Logging detalhado de todas as requisições HTTP recebidas no terminal. | [`src/app.ts`](src/app.ts)<br>`app.use(morgan("dev"));` |
+| **`npm:responser`** | Padronização do contrato de respostas JSON (`status`, `code`, `success`, `message`, `data`). | [`src/utils/response.ts`](src/utils/response.ts)<br>Middlewares globais e respostas de controllers. |
+| **`npm:request-check`** | Validação estrita de presença e obrigatoriedade de campos no payload HTTP. | [`src/utils/validation.ts`](src/utils/validation.ts)<br>`checkRequestFields(req.body, ["email", "password"])` |
+| **`npm:throwlhos`** | Lançamento centralizado de exceções HTTP tratadas pelo `errorHandler`. | [`src/middlewares/errorHandler.ts`](src/middlewares/errorHandler.ts)<br>`throwlhos.badRequest(...)`, `throwlhos.unauthorized(...)` |
+| **`jsr:@zarco/isness`** | Checagem e asserção de tipos (validação de e-mail, datas futuras, números positivos). | [`src/utils/validation.ts`](src/utils/validation.ts)<br>`isness(email).isEmail()`, `isness(price).isPositiveNumber()` |
 
 ---
 
@@ -156,7 +156,7 @@ Inicie a aplicação (`deno task dev` ou `deno task dev:test`) e acesse no naveg
 Toda a especificação OpenAPI 3.0 é servida interativamente com botão de teste **Try it out** e suporte para autenticação Bearer no topo da página.
 
 ### 📬 Coleção Postman com Auto-JWT
-Os arquivos para importação no Postman estão localizados na pasta `postman/`:
+Os arquivos para importação no Postman estão localizados na pasta [`postman/`](postman):
 1. **Coleção**: `postman/TicketPulse.postman_collection.json`
 2. **Ambiente**: `postman/TicketPulse.postman_environment.json`
 
