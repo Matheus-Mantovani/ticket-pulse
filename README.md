@@ -12,16 +12,16 @@ O **TicketPulse** é uma API RESTful para gerenciamento de eventos e venda de in
 
 ## 📌 Sumário
 
-1. [Visão Geral & Recursos](#-visão-geral--recursos)
-2. [Como Executar](#-como-executar)
-3. [Comprovação dos 5 Pacotes Obrigatórios da AGX](#-comprovação-dos-5-pacotes-obrigatórios-da-agx)
-4. [Variáveis de Ambiente (.env)](#-variáveis-de-ambiente-env)
-5. [Tabela Completa de Endpoints da API](#-tabela-completa-de-endpoints-da-api)
-6. [Documentação Publicada (Swagger UI & Postman Collection)](#-documentação-publicada-swagger-ui--postman-collection)
+1. [Visão Geral & Recursos](#visao-geral-recursos)
+2. [Como Executar](#como-executar)
+3. [Comprovação dos 5 Pacotes Obrigatórios da AGX](#comprovacao-pacotes-agx)
+4. [Variáveis de Ambiente (.env)](#variaveis-ambiente)
+5. [Tabela Completa de Endpoints da API](#tabela-endpoints)
+6. [Documentação Publicada (Swagger UI & Postman Collection)](#documentacao-publicada)
 
 ---
 
-## 🎟️ Visão Geral & Recursos
+## <a id="visao-geral-recursos"></a>🎟️ Visão Geral & Recursos
 
 - 🔐 **Autenticação & Autorização JWT**: Cadastro de usuários, login, renovação via Refresh Token e controle de acesso baseado em perfis (RBAC - `ADMIN` vs `USER`).
 - 📅 **CRUD Completo de Eventos**: Criação, edição, busca paginada com filtros por categoria/título e exclusão de eventos (Restrito a `ADMIN`).
@@ -31,8 +31,7 @@ O **TicketPulse** é uma API RESTful para gerenciamento de eventos e venda de in
 
 ---
 
-
-## 🚀 Como Executar
+## <a id="como-executar"></a>🚀 Como Executar
 
 - **Clone este repositório**:
     ```bash
@@ -77,7 +76,7 @@ O **TicketPulse** é uma API RESTful para gerenciamento de eventos e venda de in
 
 ---
 
-## 📦 Comprovação dos 5 Pacotes Obrigatórios da AGX
+## <a id="comprovacao-pacotes-agx"></a>📦 Comprovação dos 5 Pacotes Obrigatórios da AGX
 
 A aplicação integra rigorosamente os 5 pacotes obrigatórios da especificação AGX:
 
@@ -91,7 +90,7 @@ A aplicação integra rigorosamente os 5 pacotes obrigatórios da especificaçã
 
 ---
 
-## 🔑 Variáveis de Ambiente (.env)
+## <a id="variaveis-ambiente"></a>🔑 Variáveis de Ambiente (.env)
 
 | Variável | Descrição | Exemplo de Valor |
 | :--- | :--- | :--- |
@@ -103,7 +102,7 @@ A aplicação integra rigorosamente os 5 pacotes obrigatórios da especificaçã
 
 ---
 
-## 🗺️ Tabela Completa de Endpoints da API
+## <a id="tabela-endpoints"></a>🗺️ Tabela Completa de Endpoints da API
 
 ### 🏥 Health
 | Método | Endpoint | Acesso | Descrição |
@@ -136,7 +135,7 @@ A aplicação integra rigorosamente os 5 pacotes obrigatórios da especificaçã
 
 ---
 
-## 📄 Documentação Publicada (Swagger UI & Postman Collection)
+## <a id="documentacao-publicada"></a>📄 Documentação Publicada (Swagger UI & Postman Collection)
 
 ### 🌐 Swagger UI (Navegador)
 Inicie a aplicação (`deno task dev` ou `deno task dev:test`) e acesse no navegador:
@@ -156,3 +155,4 @@ Os arquivos para importação no Postman estão localizados na pasta [`postman/`
 ## 👨‍💻 Autor
 
 Desenvolvido por **Matheus Mantovani** para a **AGX Software**.
+
