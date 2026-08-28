@@ -12,6 +12,7 @@
     "npm:@types/jsonwebtoken@^9.0.6": "9.0.10",
     "npm:@types/morgan@^1.9.9": "1.9.10",
     "npm:@types/supertest@^6.0.2": "6.0.3",
+    "npm:@types/swagger-ui-express@^4.1.6": "4.1.8",
     "npm:bcryptjs@^2.4.3": "2.4.3",
     "npm:cors@^2.8.5": "2.8.6",
     "npm:dotenv@*": "16.6.1",
@@ -175,6 +176,13 @@
       "dependencies": [
         "@types/methods",
         "@types/superagent"
+      ]
+    },
+    "@types/swagger-ui-express@4.1.8": {
+      "integrity": "sha512-AhZV8/EIreHFmBV5wAs0gzJUNq9JbbSXgJLQubCC0jtIo6prnI9MIRRxnU4MZX9RB9yXxF1V4R7jtLl/Wcj31g==",
+      "dependencies": [
+        "@types/express",
+        "@types/serve-static"
       ]
     },
     "@types/webidl-conversions@7.0.3": {
