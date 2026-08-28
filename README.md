@@ -86,7 +86,7 @@ A aplicação integra rigorosamente os 5 pacotes obrigatórios da especificaçã
 | **`npm:responser`** | Padronização do contrato de respostas JSON (`status`, `code`, `success`, `message`, `data`). | [`src/app.ts`](src/app.ts) & Controllers<br>`app.use(responser);`<br>`res.send_created("Message", data)` |
 | **`npm:request-check`** | Validação estrita de presença e obrigatoriedade de campos no payload HTTP. | [`src/utils/validation.ts`](src/utils/validation.ts)<br>`checkRequiredFields({ name, email, password })` |
 | **`npm:throwlhos`** | Lançamento e captura centralizada de exceções HTTP (`badRequest`, `unauthorized`, `notFound`). | [`src/utils/validation.ts`](src/utils/validation.ts) & [`src/middlewares/errorHandler.ts`](src/middlewares/errorHandler.ts)<br>`throw throwlhos.err_badRequest("Missing required fields")` |
-| **`jsr:@zarco/isness`** | Checagem e asserção de tipos (validação de e-mail, datas futuras, números positivos). | [`src/utils/validation.ts`](src/utils/validation.ts)<br>`isness.email(email)`, `isness.number(price)`, `isness.date(date)` |
+| **`jsr:@zarco/isness`** | Checagem e asserção de tipos (validação de e-mail, datas futuras, números positivos). | [`src/utils/validation.ts`](src/utils/validation.ts)<br>`is.email(email)`, `is.number(price)`, `is.date(date)` |
 
 ---
 

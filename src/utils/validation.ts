@@ -1,5 +1,5 @@
 import requestCheckPkg from "request-check";
-import * as isness from "@zarco/isness";
+import * as is from "@zarco/isness";
 import throwlhosPkg from "throwlhos";
 
 const requestCheck = requestCheckPkg.default || requestCheckPkg;
@@ -23,7 +23,7 @@ export function checkRequiredFields(fields: Record<string, unknown>): void {
  * Valida se um e-mail possui formato válido utilizando @zarco/isness.
  */
 export function validateEmail(email: string): void {
-  if (!email || !isness.email(email)) {
+  if (!email || !is.email(email)) {
     throw throwlhos.err_badRequest("Invalid email address format");
   }
 }
@@ -32,7 +32,7 @@ export function validateEmail(email: string): void {
  * Valida se o valor é uma string não vazia.
  */
 export function validateString(value: unknown, fieldName: string): void {
-  if (!value || typeof value !== "string" || value.trim().length === 0 || !isness.string(value)) {
+  if (!value || typeof value !== "string" || value.trim().length === 0 || !is.string(value)) {
     throw throwlhos.err_badRequest(`Field '${fieldName}' must be a non-empty string`);
   }
 }
@@ -41,7 +41,7 @@ export function validateString(value: unknown, fieldName: string): void {
  * Valida se o valor é um número maior ou igual a zero.
  */
 export function validatePositiveNumber(value: unknown, fieldName: string): void {
-  if (typeof value !== "number" || isNaN(value) || value < 0 || !isness.number(value)) {
+  if (typeof value !== "number" || isNaN(value) || value < 0 || !is.number(value)) {
     throw throwlhos.err_badRequest(`Field '${fieldName}' must be a valid non-negative number`);
   }
 }
@@ -51,7 +51,7 @@ export function validatePositiveNumber(value: unknown, fieldName: string): void 
  */
 export function validateFutureDate(dateInput: string | Date, fieldName: string): void {
   const parsedDate = new Date(dateInput);
-  if (isNaN(parsedDate.getTime()) || !isness.date(parsedDate)) {
+  if (isNaN(parsedDate.getTime()) || !is.date(parsedDate)) {
     throw throwlhos.err_badRequest(`Field '${fieldName}' must be a valid date`);
   }
 
