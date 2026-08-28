@@ -1,21 +1,25 @@
+import { Query } from "mongoose";
 import { UserModel, IUser } from "../models/User.ts";
+import { BaseRepository } from "./BaseRepository.ts";
 import { IUserRepository } from "./IUserRepository.ts";
 
-export class UserRepository implements IUserRepository {
-  async findByEmail(email: string): Promise<IUser | null> {
-    return await UserModel.findOne({ email });
+export class UserRepository extends BaseRepository<IUser> implements IUserRepository {
+  constructor() {
+    super(UserModel);
   }
 
-  async findById(id: string): Promise<IUser | null> {
-    return await UserModel.findById(id);
+  findByEmail(email: string): Query<IUser | null, IUser> {
+    return this.findOne({ email });
   }
 
-  async create(userData: Partial<IUser>): Promise<IUser> {
-    const user = new UserModel(userData);
-    return await user.save();
+  create(userData: Partial<IUser>): Promise<IUser> {
+    return this.createOne(userData);
   }
 
-  async updateRefreshToken(id: string, refreshToken: string | null): Promise<void> {
-    await UserModel.findByIdAndUpdate(id, { refreshToken });
+  updateRefreshToken(
+    id: string,
+    refreshToken: string | null
+  ): Query<IUser | null, IUser> {
+    return this.updateById(id, { refreshToken });
   }
 }

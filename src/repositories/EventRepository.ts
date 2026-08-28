@@ -1,4 +1,6 @@
+import { Query, ClientSession } from "mongoose";
 import { EventModel, IEvent } from "../models/Event.ts";
+import { BaseRepository } from "./BaseRepository.ts";
 import {
   IEventRepository,
   EventFilter,
@@ -6,10 +8,16 @@ import {
   PaginatedEvents,
 } from "./IEventRepository.ts";
 
-export class EventRepository implements IEventRepository {
-  async create(eventData: Partial<IEvent>): Promise<IEvent> {
-    const event = new EventModel(eventData);
-    return await event.save();
+export class EventRepository
+  extends BaseRepository<IEvent>
+  implements IEventRepository
+{
+  constructor() {
+    super(EventModel);
+  }
+
+  create(eventData: Partial<IEvent>, session?: ClientSession): Promise<IEvent> {
+    return this.createOne(eventData, session);
   }
 
   async findAll(
@@ -28,26 +36,29 @@ export class EventRepository implements IEventRepository {
 
     const skip = (pagination.page - 1) * pagination.limit;
     const [events, total] = await Promise.all([
-      EventModel.find(query).skip(skip).limit(pagination.limit).sort({ date: 1 }),
-      EventModel.countDocuments(query),
+      this.find(query).skip(skip).limit(pagination.limit).sort({ date: 1 }),
+      this.countDocuments(query),
     ]);
 
     return { events, total };
   }
 
-  async findById(id: string): Promise<IEvent | null> {
-    return await EventModel.findById(id);
+  update(
+    id: string,
+    eventData: Partial<IEvent>,
+    session?: ClientSession
+  ): Query<IEvent | null, IEvent> {
+    return this.updateById(id, eventData, session);
   }
 
-  async update(id: string, eventData: Partial<IEvent>): Promise<IEvent | null> {
-    return await EventModel.findByIdAndUpdate(id, eventData, {
-      new: true,
-      runValidators: true,
-    });
+  delete(id: string, session?: ClientSession): Query<IEvent | null, IEvent> {
+    return this.deleteById(id, session);
   }
 
-  async delete(id: string): Promise<boolean> {
-    const result = await EventModel.findByIdAndDelete(id);
-    return result !== null;
+  decrementAvailableTickets(
+    id: string,
+    session?: ClientSession
+  ): Query<IEvent | null, IEvent> {
+    return this.updateById(id, { $inc: { availableTickets: -1 } }, session);
   }
 }

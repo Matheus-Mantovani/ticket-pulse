@@ -1,17 +1,24 @@
-import mongoose from "mongoose";
+import { Query, ClientSession } from "mongoose";
 import { TicketModel, ITicket } from "../models/Ticket.ts";
+import { BaseRepository } from "./BaseRepository.ts";
 import { ITicketRepository } from "./ITicketRepository.ts";
 
-export class TicketRepository implements ITicketRepository {
-  async createInTransaction(
-    ticketData: Partial<ITicket>,
-    session: mongoose.ClientSession
-  ): Promise<ITicket> {
-    const [ticket] = await TicketModel.create([ticketData], { session });
-    return ticket;
+export class TicketRepository
+  extends BaseRepository<ITicket>
+  implements ITicketRepository
+{
+  constructor() {
+    super(TicketModel);
   }
 
-  async findByUser(userId: string): Promise<ITicket[]> {
-    return await TicketModel.find({ user: userId }).populate("event").sort({ purchasedAt: -1 });
+  createInTransaction(
+    ticketData: Partial<ITicket>,
+    session: ClientSession
+  ): Promise<ITicket> {
+    return this.createOne(ticketData, session);
+  }
+
+  findByUser(userId: string): Query<ITicket[], ITicket> {
+    return this.find({ user: userId }).populate("event").sort({ purchasedAt: -1 });
   }
 }
