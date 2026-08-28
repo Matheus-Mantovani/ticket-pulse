@@ -13,12 +13,11 @@ O **TicketPulse** é uma API RESTful para gerenciamento de eventos e venda de in
 ## 📌 Sumário
 
 1. [Visão Geral & Recursos](#-visão-geral--recursos)
-2. [Arquitetura & Padrões Corporativos AGX](#-arquitetura--padrões-corporativos-agx)
-3. [Como Executar](#-como-executar)
-4. [Comprovação dos 5 Pacotes Obrigatórios da AGX](#-comprovação-dos-5-pacotes-obrigatórios-da-agx)
-5. [Variáveis de Ambiente (.env)](#-variáveis-de-ambiente-env)
-6. [Tabela Completa de Endpoints da API](#-tabela-completa-de-endpoints-da-api)
-7. [Documentação Publicada (Swagger UI & Postman Collection)](#-documentação-publicada-swagger-ui--postman-collection)
+2. [Como Executar](#-como-executar)
+3. [Comprovação dos 5 Pacotes Obrigatórios da AGX](#-comprovação-dos-5-pacotes-obrigatórios-da-agx)
+4. [Variáveis de Ambiente (.env)](#-variáveis-de-ambiente-env)
+5. [Tabela Completa de Endpoints da API](#-tabela-completa-de-endpoints-da-api)
+6. [Documentação Publicada (Swagger UI & Postman Collection)](#-documentação-publicada-swagger-ui--postman-collection)
 
 ---
 
