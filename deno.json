@@ -29,6 +29,11 @@
     "test": "deno test --allow-net --allow-read --allow-env --allow-sys",
     "test:cov": "deno test --allow-net --allow-read --allow-env --allow-sys --coverage=cov_profile"
   },
+  "lint": {
+    "rules": {
+      "exclude": ["no-namespace"]
+    }
+  },
   "compilerOptions": {
     "strict": true
   }

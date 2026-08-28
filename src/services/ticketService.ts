@@ -9,18 +9,40 @@ import { EventRepository } from "../repositories/EventRepository.ts";
 
 const throwlhos = throwlhosPkg.default || throwlhosPkg;
 
+export namespace TicketService {
+  export namespace PurchaseTicket {
+    export type Input = {
+      input: {
+        eventId: string;
+        userId: string;
+      };
+    };
+    export type Output = TicketDTO;
+  }
+
+  export namespace GetUserTickets {
+    export type Input = {
+      input: {
+        userId: string;
+      };
+    };
+    export type Output = TicketDTO[];
+  }
+}
+
 export class TicketService {
   constructor(
     private ticketRepo: ITicketRepository = new TicketRepository(),
     private eventRepo: IEventRepository = new EventRepository()
   ) {}
 
-  async purchaseTicketService(
-    eventId: string,
-    userId: string
-  ): Promise<TicketDTO> {
+  async purchaseTicket(
+    params: TicketService.PurchaseTicket.Input
+  ): Promise<TicketService.PurchaseTicket.Output> {
+    const { eventId, userId } = params.input;
+
     if (!mongoose.Types.ObjectId.isValid(eventId)) {
-      throw throwlhos.err_notFound("Event not found");
+      throw throwlhos.err_notFound("Event not found", { eventId });
     }
 
     const session = await mongoose.startSession();
@@ -29,15 +51,21 @@ export class TicketService {
     try {
       const event = await EventModel.findById(eventId).session(session);
       if (!event) {
-        throw throwlhos.err_notFound("Event not found");
+        throw throwlhos.err_notFound("Event not found", { eventId });
       }
 
       if (event.status !== "ACTIVE") {
-        throw throwlhos.err_badRequest("Event is not active for ticket purchase");
+        throw throwlhos.err_badRequest(
+          "Event is not active for ticket purchase",
+          { eventId, status: event.status }
+        );
       }
 
       if (event.availableTickets <= 0) {
-        throw throwlhos.err_badRequest("Tickets sold out");
+        throw throwlhos.err_badRequest("Tickets sold out", {
+          eventId,
+          availableTickets: event.availableTickets,
+        });
       }
 
       event.availableTickets -= 1;
@@ -70,14 +98,28 @@ export class TicketService {
     }
   }
 
-  async getUserTicketsService(userId: string): Promise<TicketDTO[]> {
+  async getUserTickets(
+    params: TicketService.GetUserTickets.Input
+  ): Promise<TicketService.GetUserTickets.Output> {
+    const { userId } = params.input;
+
     if (!mongoose.Types.ObjectId.isValid(userId)) {
-      throw throwlhos.err_badRequest("Invalid user ID");
+      throw throwlhos.err_badRequest("Invalid user ID", { userId });
     }
 
     const tickets = await this.ticketRepo.findByUser(userId);
     return tickets.map(toTicketDTO);
   }
+
+  // [TEMPORÁRIO - REMOVER NA ETAPA 4] Retrocompatibilidade temporária para controllers existentes
+  purchaseTicketService(eventId: string, userId: string) {
+    return this.purchaseTicket({ input: { eventId, userId } });
+  }
+
+  getUserTicketsService(userId: string) {
+    return this.getUserTickets({ input: { userId } });
+  }
 }
 
+// [TEMPORÁRIO - REMOVER NA ETAPA 4] Export de instância default para controllers legados
 export const defaultTicketService = new TicketService();
