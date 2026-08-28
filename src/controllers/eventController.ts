@@ -210,13 +210,6 @@ export class EventController {
       next(error);
     }
   };
-
-  // [TEMPORÁRIO - REMOVER NA ETAPA 6] Aliases para manter os testes unitários legados funcionando até a Etapa 6
-  createEvent = this.create;
-  getAllEvents = this.list;
-  getEventById = this.getById;
-  updateEvent = this.update;
-  deleteEvent = this.delete;
 }
 
 export const defaultEventController = new EventController();

@@ -6,12 +6,13 @@ import {
   createMockRequest,
   createMockResponse,
   createMockNext,
+  mockQuery,
 } from "./mockExpress.ts";
 
 function createMockUserRepo(overrides: Partial<IUserRepository> = {}): IUserRepository {
   return {
-    findByEmail: (_email: string) => Promise.resolve(null),
-    findById: (_id: string) => Promise.resolve(null),
+    findByEmail: (_email: string) => mockQuery<IUser | null, IUser>(null),
+    findById: (_id: string) => mockQuery<IUser | null, IUser>(null),
     create: (data: Partial<IUser>) =>
       Promise.resolve({
         _id: "mock_user_id_123",
@@ -22,7 +23,7 @@ function createMockUserRepo(overrides: Partial<IUserRepository> = {}): IUserRepo
         createdAt: new Date(),
         updatedAt: new Date(),
       } as unknown as IUser),
-    updateRefreshToken: (_id: string, _token: string | null) => Promise.resolve(),
+    updateRefreshToken: (_id: string, _token: string | null) => mockQuery<IUser | null, IUser>(null),
     ...overrides,
   };
 }
@@ -32,7 +33,7 @@ Deno.test("AuthController Unit Tests", async (t) => {
     const mockRepo = createMockUserRepo({
       findByEmail: (email: string) => {
         assertEquals(email, "novo@example.com");
-        return Promise.resolve(null);
+        return mockQuery<IUser | null, IUser>(null);
       },
       create: (data: Partial<IUser>) => {
         return Promise.resolve({
@@ -47,7 +48,7 @@ Deno.test("AuthController Unit Tests", async (t) => {
       updateRefreshToken: (id: string, token: string | null) => {
         assertEquals(id, "507f1f77bcf86cd799439011");
         assertExists(token);
-        return Promise.resolve();
+        return mockQuery<IUser | null, IUser>(null);
       },
     });
 
@@ -81,7 +82,7 @@ Deno.test("AuthController Unit Tests", async (t) => {
     const mockRepo = createMockUserRepo({
       findByEmail: (email: string) => {
         assertEquals(email, "user@example.com");
-        return Promise.resolve({
+        return mockQuery<IUser | null, IUser>({
           _id: "507f1f77bcf86cd799439012",
           name: "User Exemplo",
           email: "user@example.com",
@@ -118,7 +119,7 @@ Deno.test("AuthController Unit Tests", async (t) => {
     const mockRepo = createMockUserRepo({
       findById: (id: string) => {
         assertEquals(id, "507f1f77bcf86cd799439012");
-        return Promise.resolve({
+        return mockQuery<IUser | null, IUser>({
           _id: "507f1f77bcf86cd799439012",
           name: "User Exemplo",
           email: "user@example.com",

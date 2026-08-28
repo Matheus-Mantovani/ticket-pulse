@@ -96,10 +96,6 @@ export class TicketController {
       next(error);
     }
   };
-
-  // [TEMPORÁRIO - REMOVER NA ETAPA 6] Aliases para manter os testes unitários legados funcionando até a Etapa 6
-  purchaseTicket = this.purchase;
-  getUserTickets = this.myTickets;
 }
 
 export const defaultTicketController = new TicketController();

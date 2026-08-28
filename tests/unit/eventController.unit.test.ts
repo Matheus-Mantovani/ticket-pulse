@@ -6,6 +6,7 @@ import {
   createMockRequest,
   createMockResponse,
   createMockNext,
+  mockQuery,
 } from "./mockExpress.ts";
 
 function createMockEventRepo(overrides: Partial<IEventRepository> = {}): IEventRepository {
@@ -26,9 +27,9 @@ function createMockEventRepo(overrides: Partial<IEventRepository> = {}): IEventR
         updatedAt: new Date(),
       } as unknown as IEvent),
     findAll: () => Promise.resolve({ events: [], total: 0 }),
-    findById: (_id: string) => Promise.resolve(null),
-    update: (_id: string, _data: Partial<IEvent>) => Promise.resolve(null),
-    delete: (_id: string) => Promise.resolve(true),
+    findById: (_id: string) => mockQuery<IEvent | null, IEvent>(null),
+    update: (_id: string, _data: Partial<IEvent>) => mockQuery<IEvent | null, IEvent>(null),
+    delete: (_id: string) => mockQuery<IEvent | null, IEvent>(null),
     ...overrides,
   };
 }
@@ -73,7 +74,7 @@ Deno.test("EventController Unit Tests", async (t) => {
     const { res, getMockData } = createMockResponse();
     const { next } = createMockNext();
 
-    await controller.createEvent(req, res, next);
+    await controller.create(req, res, next);
 
     const { statusCode, data } = getMockData();
     assertEquals(statusCode, 201);
@@ -117,7 +118,7 @@ Deno.test("EventController Unit Tests", async (t) => {
     const { res, getMockData } = createMockResponse();
     const { next } = createMockNext();
 
-    await controller.getAllEvents(req, res, next);
+    await controller.list(req, res, next);
 
     const { statusCode, data } = getMockData();
     assertEquals(statusCode, 200);
@@ -133,7 +134,7 @@ Deno.test("EventController Unit Tests", async (t) => {
     const mockRepo = createMockEventRepo({
       findById: (id: string) => {
         assertEquals(id, validObjectId);
-        return Promise.resolve({
+        return mockQuery<IEvent | null, IEvent>({
           _id: validObjectId,
           title: "Evento Encontrado",
           description: "Desc",
@@ -158,7 +159,7 @@ Deno.test("EventController Unit Tests", async (t) => {
     const { res, getMockData } = createMockResponse();
     const { next } = createMockNext();
 
-    await controller.getEventById(req, res, next);
+    await controller.getById(req, res, next);
 
     const { statusCode, data } = getMockData();
     assertEquals(statusCode, 200);
@@ -173,7 +174,7 @@ Deno.test("EventController Unit Tests", async (t) => {
     const mockRepo = createMockEventRepo({
       delete: (id: string) => {
         assertEquals(id, validObjectId);
-        return Promise.resolve(true);
+        return mockQuery<IEvent | null, IEvent>({ _id: validObjectId } as unknown as IEvent);
       },
     });
 
@@ -185,7 +186,7 @@ Deno.test("EventController Unit Tests", async (t) => {
     const { res, getMockData } = createMockResponse();
     const { next } = createMockNext();
 
-    await controller.deleteEvent(req, res, next);
+    await controller.delete(req, res, next);
 
     const { statusCode } = getMockData();
     assertEquals(statusCode, 200);

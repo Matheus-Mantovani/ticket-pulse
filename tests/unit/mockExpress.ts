@@ -1,4 +1,19 @@
 import { Request, Response, NextFunction } from "express";
+import { Query } from "mongoose";
+
+export function mockQuery<T, DocType = T>(result: T): Query<T, DocType> {
+  const promise = Promise.resolve(result);
+  const q = promise as unknown as Query<T, DocType>;
+  // deno-lint-ignore no-explicit-any
+  q.exec = (() => promise) as any;
+  // deno-lint-ignore no-explicit-any
+  q.lean = (() => q) as any;
+  // deno-lint-ignore no-explicit-any
+  q.select = (() => q) as any;
+  // deno-lint-ignore no-explicit-any
+  q.populate = (() => q) as any;
+  return q;
+}
 
 export function createMockRequest(options: {
   body?: unknown;

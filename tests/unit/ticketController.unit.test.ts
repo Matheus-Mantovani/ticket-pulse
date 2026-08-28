@@ -9,6 +9,7 @@ import {
   createMockRequest,
   createMockResponse,
   createMockNext,
+  mockQuery,
 } from "./mockExpress.ts";
 
 function createMockTicketRepo(overrides: Partial<ITicketRepository> = {}): ITicketRepository {
@@ -24,7 +25,7 @@ function createMockTicketRepo(overrides: Partial<ITicketRepository> = {}): ITick
         createdAt: new Date(),
         updatedAt: new Date(),
       } as unknown as ITicket),
-    findByUser: () => Promise.resolve([]),
+    findByUser: () => mockQuery<ITicket[], ITicket>([]),
     ...overrides,
   };
 }
@@ -33,9 +34,9 @@ function createMockEventRepo(overrides: Partial<IEventRepository> = {}): IEventR
   return {
     create: () => Promise.resolve({} as unknown as IEvent),
     findAll: () => Promise.resolve({ events: [], total: 0 }),
-    findById: () => Promise.resolve(null),
-    update: () => Promise.resolve(null),
-    delete: () => Promise.resolve(true),
+    findById: () => mockQuery<IEvent | null, IEvent>(null),
+    update: () => mockQuery<IEvent | null, IEvent>(null),
+    delete: () => mockQuery<IEvent | null, IEvent>(null),
     ...overrides,
   };
 }
@@ -47,7 +48,7 @@ Deno.test("TicketController Unit Tests", async (t) => {
     const mockTicketRepo = createMockTicketRepo({
       findByUser: (userId: string) => {
         assertEquals(userId, validUserId);
-        return Promise.resolve([
+        return mockQuery<ITicket[], ITicket>([
           {
             _id: "507f1f77bcf86cd799439088",
             event: new mongoose.Types.ObjectId("507f1f77bcf86cd799439099") as unknown as mongoose.Types.ObjectId,
@@ -72,7 +73,7 @@ Deno.test("TicketController Unit Tests", async (t) => {
     const { res, getMockData } = createMockResponse();
     const { next } = createMockNext();
 
-    await controller.getUserTickets(req, res, next);
+    await controller.myTickets(req, res, next);
 
     const { statusCode, data } = getMockData();
     assertEquals(statusCode, 200);
