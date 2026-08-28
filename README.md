@@ -6,7 +6,7 @@
 [![MongoDB Atlas](https://img.shields.io/badge/MongoDB_Atlas-Cluster-green?style=flat-square&logo=mongodb)](https://www.mongodb.com/atlas)
 [![OpenAPI 3.0](https://img.shields.io/badge/Swagger-OpenAPI_3.0-brightgreen?style=flat-square&logo=swagger)](http://localhost:3000/api-docs)
 
-O **TicketPulse** é uma API RESTful para gerenciamento de eventos e venda de ingressos com **transações atômicas multi-documento no MongoDB Atlas**, desenvolvida em **Deno 2** utilizando **Express**, **TypeScript** e **Mongoose** estritamente alinhada aos **Padrões Corporativos de Arquitetura da AGX**.
+O **TicketPulse** é uma API RESTful para gerenciamento de eventos e venda de ingressos com **transações atômicas multi-documento no MongoDB Atlas**, desenvolvida em **Deno 2** utilizando **Express**, **TypeScript** e **Mongoose**.
 
 ---
 
