@@ -32,33 +32,6 @@ O **TicketPulse** é uma API RESTful para gerenciamento de eventos e venda de in
 
 ---
 
-## 🏗️ Arquitetura & Padrões Corporativos AGX
-
-A aplicação segue rigorosamente os padrões de engenharia da **AGX Software**:
-
-1. **Mongoose Models com `Schema.loadClass(Class)`**:
-   - Definição de interfaces no topo do arquivo.
-   - Declaração do Mongoose Schema no meio com `default: null` em propriedades opcionais.
-   - Carregamento da classe POO no final via `schema.loadClass(Class)`.
-   - Arquivos: [`src/models/User.ts`](src/models/User.ts), [`src/models/Event.ts`](src/models/Event.ts), [`src/models/Ticket.ts`](src/models/Ticket.ts).
-
-2. **Repositório Base Genérico `BaseRepository<T>` sem `await`**:
-   - Abstração abstrata generificada em [`src/repositories/BaseRepository.ts`](src/repositories/BaseRepository.ts).
-   - Não realiza `await` interno, retornando instâncias de `Query` Mongoose diretamente para composição de `.exec()`, `.lean()`, `.select()`.
-   - Repositórios concretos: [`UserRepository.ts`](src/repositories/UserRepository.ts), [`EventRepository.ts`](src/repositories/EventRepository.ts), [`TicketRepository.ts`](src/repositories/TicketRepository.ts).
-
-3. **Services com Namespace Pattern e Injeção de Dependência**:
-   - Definição via `export namespace ServiceName` com sub-namespaces para contratos de entrada.
-   - Envelopamento estrito de parâmetros em `{ input: { ... } }`.
-   - Injeção de repositórios via construtor com valores default (`new Repository()`).
-   - Arquivos: [`src/services/authService.ts`](src/services/authService.ts), [`src/services/eventService.ts`](src/services/eventService.ts), [`src/services/ticketService.ts`](src/services/ticketService.ts).
-
-4. **Controllers com Formatação de Blocos Estrita & Caminhos Absolutos**:
-   - Eliminação de *one-liners*: uso de blocos com chaves `{}` obrigatórios em todos os `if`, `throw` e `return`.
-   - Registro de rotas com caminhos absolutos completos ([`authRoutes.ts`](src/routes/authRoutes.ts), [`eventRoutes.ts`](src/routes/eventRoutes.ts), [`ticketRoutes.ts`](src/routes/ticketRoutes.ts)).
-   - Envio de metadados de depuração / contexto no 2º argumento de `responser` e `throwlhos`.
-
----
 
 ## 🚀 Como Executar
 
