@@ -6,18 +6,19 @@
 [![MongoDB Atlas](https://img.shields.io/badge/MongoDB_Atlas-Cluster-green?style=flat-square&logo=mongodb)](https://www.mongodb.com/atlas)
 [![OpenAPI 3.0](https://img.shields.io/badge/Swagger-OpenAPI_3.0-brightgreen?style=flat-square&logo=swagger)](http://localhost:3000/api-docs)
 
-O **TicketPulse** é uma API RESTful para gerenciamento de eventos e venda de ingressos com **transações atômicas multi-documento no MongoDB Atlas**, desenvolvida em **Deno 2** utilizando **Express**, **TypeScript** e **Mongoose**.
+O **TicketPulse** é uma API RESTful para gerenciamento de eventos e venda de ingressos com **transações atômicas multi-documento no MongoDB Atlas**, desenvolvida em **Deno 2** utilizando **Express**, **TypeScript** e **Mongoose** estritamente alinhada aos **Padrões Corporativos de Arquitetura da AGX**.
 
 ---
 
 ## 📌 Sumário
 
 1. [Visão Geral & Recursos](#-visão-geral--recursos)
-2. [Como Executar](#-como-executar)
-3. [Comprovação dos 5 Pacotes Obrigatórios da AGX](#-comprovação-dos-5-pacotes-obrigatórios-da-agx)
-4. [Variáveis de Ambiente (.env)](#-variáveis-de-ambiente-env)
-5. [Tabela Completa de Endpoints da API](#-tabela-completa-de-endpoints-da-api)
-6. [Documentação Publicada (Swagger UI & Postman Collection)](#-documentação-publicada-swagger-ui--postman-collection)
+2. [Arquitetura & Padrões Corporativos AGX](#-arquitetura--padrões-corporativos-agx)
+3. [Como Executar](#-como-executar)
+4. [Comprovação dos 5 Pacotes Obrigatórios da AGX](#-comprovação-dos-5-pacotes-obrigatórios-da-agx)
+5. [Variáveis de Ambiente (.env)](#-variáveis-de-ambiente-env)
+6. [Tabela Completa de Endpoints da API](#-tabela-completa-de-endpoints-da-api)
+7. [Documentação Publicada (Swagger UI & Postman Collection)](#-documentação-publicada-swagger-ui--postman-collection)
 
 ---
 
@@ -26,8 +27,36 @@ O **TicketPulse** é uma API RESTful para gerenciamento de eventos e venda de in
 - 🔐 **Autenticação & Autorização JWT**: Cadastro de usuários, login, renovação via Refresh Token e controle de acesso baseado em perfis (RBAC - `ADMIN` vs `USER`).
 - 📅 **CRUD Completo de Eventos**: Criação, edição, busca paginada com filtros por categoria/título e exclusão de eventos (Restrito a `ADMIN`).
 - ⚡ **Operação Atômica ACID Multi-Documento**: Fluxo de compra de ingressos com decremento de estoque e emissão de bilhete único executado dentro de uma sessão `session.startTransaction()` do MongoDB Atlas.
-- 📦 **Padrão de Resposta JSON & Tratamento de Erros**: Respostas HTTP padronizadas e middleware centralizado de exceções.
+- 📦 **Padrão de Resposta JSON & Tratamento de Erros**: Respostas HTTP padronizadas (`responser`) e middleware centralizado de exceções (`throwlhos`).
 - 📄 **Documentação Interativa Publicada**: Swagger UI exposto na rota `/api-docs` e Coleção Postman exportada com script automático de captura de JWT.
+
+---
+
+## 🏗️ Arquitetura & Padrões Corporativos AGX
+
+A aplicação segue rigorosamente os padrões de engenharia da **AGX Software**:
+
+1. **Mongoose Models com `Schema.loadClass(Class)`**:
+   - Definição de interfaces no topo do arquivo.
+   - Declaração do Mongoose Schema no meio com `default: null` em propriedades opcionais.
+   - Carregamento da classe POO no final via `schema.loadClass(Class)`.
+   - Arquivos: [`src/models/User.ts`](src/models/User.ts), [`src/models/Event.ts`](src/models/Event.ts), [`src/models/Ticket.ts`](src/models/Ticket.ts).
+
+2. **Repositório Base Genérico `BaseRepository<T>` sem `await`**:
+   - Abstração abstrata generificada em [`src/repositories/BaseRepository.ts`](src/repositories/BaseRepository.ts).
+   - Não realiza `await` interno, retornando instâncias de `Query` Mongoose diretamente para composição de `.exec()`, `.lean()`, `.select()`.
+   - Repositórios concretos: [`UserRepository.ts`](src/repositories/UserRepository.ts), [`EventRepository.ts`](src/repositories/EventRepository.ts), [`TicketRepository.ts`](src/repositories/TicketRepository.ts).
+
+3. **Services com Namespace Pattern e Injeção de Dependência**:
+   - Definição via `export namespace ServiceName` com sub-namespaces para contratos de entrada.
+   - Envelopamento estrito de parâmetros em `{ input: { ... } }`.
+   - Injeção de repositórios via construtor com valores default (`new Repository()`).
+   - Arquivos: [`src/services/authService.ts`](src/services/authService.ts), [`src/services/eventService.ts`](src/services/eventService.ts), [`src/services/ticketService.ts`](src/services/ticketService.ts).
+
+4. **Controllers com Formatação de Blocos Estrita & Caminhos Absolutos**:
+   - Eliminação de *one-liners*: uso de blocos com chaves `{}` obrigatórios em todos os `if`, `throw` e `return`.
+   - Registro de rotas com caminhos absolutos completos ([`authRoutes.ts`](src/routes/authRoutes.ts), [`eventRoutes.ts`](src/routes/eventRoutes.ts), [`ticketRoutes.ts`](src/routes/ticketRoutes.ts)).
+   - Envio de metadados de depuração / contexto no 2º argumento de `responser` e `throwlhos`.
 
 ---
 
@@ -67,23 +96,11 @@ O **TicketPulse** é uma API RESTful para gerenciamento de eventos e venda de in
 
 - **Execute os Testes Automatizados**:
     ```bash
-    # Executar toda a suíte de testes (Unitários + Integração E2E)
+    # Executar toda a suíte de testes (Unitários + Integração E2E - 33 cenários)
     deno task test
     
-    # Executar apenas testes unitários dos controllers (Mocks em memória)
+    # Executar apenas testes unitários dos controllers (Mocks sem await)
     deno test tests/unit/
-    ```
-
-- **Gerar Relatório de Cobertura de Código (Code Coverage)**:
-    ```bash
-    # Executar testes gerando o perfil de cobertura
-    deno task test:cov
-    
-    # Visualizar o relatório no terminal
-    deno coverage cov_profile/
-    
-    # Visualizar o relatório filtrado pelos controllers
-    deno coverage cov_profile/ | grep controller
     ```
 
 ---
@@ -166,4 +183,4 @@ Os arquivos para importação no Postman estão localizados na pasta [`postman/`
 
 ## 👨‍💻 Autor
 
-Desenvolvido por **Matheus Mantovani** para o **Projeto 1 - Deno CRUD (AGX)**.
+Desenvolvido por **Matheus Mantovani** para a **AGX Software**.
