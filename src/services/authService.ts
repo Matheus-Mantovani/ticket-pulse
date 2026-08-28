@@ -145,14 +145,9 @@ export class AuthService {
   }
 
   async refreshAccessToken(
-    paramsOrToken: AuthService.RefreshAccessToken.Input | string
+    params: AuthService.RefreshAccessToken.Input
   ): Promise<AuthService.RefreshAccessToken.Output> {
-    // [TEMPORÁRIO - REMOVER NA ETAPA 4] Suporte para string direta do controller legado
-    const refreshTokenInput =
-      typeof paramsOrToken === "string"
-        ? paramsOrToken
-        : paramsOrToken.input.refreshToken;
-
+    const { refreshToken: refreshTokenInput } = params.input;
     const decoded = verifyRefreshToken(refreshTokenInput);
 
     const user = await this.userRepo.findById(decoded.id);
@@ -189,20 +184,4 @@ export class AuthService {
 
     return toUserDTO(user);
   }
-
-  // [TEMPORÁRIO - REMOVER NA ETAPA 4] Retrocompatibilidade temporária para controllers existentes
-  registerUser(input: AuthService.Register.Input["input"]) {
-    return this.register({ input });
-  }
-
-  loginUser(input: AuthService.Login.Input["input"]) {
-    return this.login({ input });
-  }
-
-  getUserProfile(userId: string) {
-    return this.getUserById({ input: { userId } });
-  }
 }
-
-// [TEMPORÁRIO - REMOVER NA ETAPA 4] Export de instância default para controllers legados
-export const defaultAuthService = new AuthService();

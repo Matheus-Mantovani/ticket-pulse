@@ -5,13 +5,13 @@ import { requireRole } from "../middlewares/roleMiddleware.ts";
 
 const router = Router();
 
-// Rotas públicas de consulta
-router.get("/", defaultEventController.getAllEvents);
-router.get("/:id", defaultEventController.getEventById);
+// Rotas públicas de consulta com caminhos absolutos completos
+router.get("/api/events", defaultEventController.list);
+router.get("/api/events/:id", defaultEventController.getById);
 
-// Rotas protegidas restritas exclusivamente a Administradores (ADMIN)
-router.post("/", authMiddleware, requireRole("ADMIN"), defaultEventController.createEvent);
-router.put("/:id", authMiddleware, requireRole("ADMIN"), defaultEventController.updateEvent);
-router.delete("/:id", authMiddleware, requireRole("ADMIN"), defaultEventController.deleteEvent);
+// Rotas protegidas restritas exclusivamente a Administradores (ADMIN) com caminhos absolutos completos
+router.post("/api/events", authMiddleware, requireRole("ADMIN"), defaultEventController.create);
+router.put("/api/events/:id", authMiddleware, requireRole("ADMIN"), defaultEventController.update);
+router.delete("/api/events/:id", authMiddleware, requireRole("ADMIN"), defaultEventController.delete);
 
 export default router;

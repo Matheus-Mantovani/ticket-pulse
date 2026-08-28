@@ -21,20 +21,28 @@ export class TicketController {
     this.ticketService = new TicketService(ticketRepo, eventRepo);
   }
 
-  purchaseTicket = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  purchase = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const authReq = req as AuthenticatedRequest;
       if (!authReq.user || !authReq.user.id) {
-        throw throwlhos.err_unauthorized("Authentication required");
+        throw throwlhos.err_unauthorized("Authentication required", {
+          context: "authReq.user",
+        });
       }
 
       const { eventId } = req.body;
       checkRequiredFields({ eventId });
 
-      const ticket = await this.ticketService.purchaseTicketService(
-        eventId,
-        authReq.user.id
-      );
+      const ticket = await this.ticketService.purchaseTicket({
+        input: {
+          eventId,
+          userId: authReq.user.id,
+        },
+      });
 
       const resRes = res as ResponserResponse;
       if (typeof resRes.send_created === "function") {
@@ -53,14 +61,24 @@ export class TicketController {
     }
   };
 
-  getUserTickets = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  myTickets = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const authReq = req as AuthenticatedRequest;
       if (!authReq.user || !authReq.user.id) {
-        throw throwlhos.err_unauthorized("Authentication required");
+        throw throwlhos.err_unauthorized("Authentication required", {
+          context: "authReq.user",
+        });
       }
 
-      const tickets = await this.ticketService.getUserTicketsService(authReq.user.id);
+      const tickets = await this.ticketService.getUserTickets({
+        input: {
+          userId: authReq.user.id,
+        },
+      });
 
       const resRes = res as ResponserResponse;
       if (typeof resRes.send_ok === "function") {
@@ -78,6 +96,10 @@ export class TicketController {
       next(error);
     }
   };
+
+  // [TEMPORÁRIO - REMOVER NA ETAPA 6] Aliases para manter os testes unitários legados funcionando até a Etapa 6
+  purchaseTicket = this.purchase;
+  getUserTickets = this.myTickets;
 }
 
 export const defaultTicketController = new TicketController();

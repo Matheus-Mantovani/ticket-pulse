@@ -1,6 +1,6 @@
 import { assertEquals, assertExists } from "@std/assert";
 import { app, supertest, setupTestDB, teardownTestDB, clearDatabase, createTestUser } from "./helpers.ts";
-import { createEventService } from "../src/services/eventService.ts";
+import { EventService } from "../src/services/eventService.ts";
 
 Deno.test({
   name: "Ticket Purchase Integration Tests",
@@ -14,6 +14,7 @@ Deno.test({
     let _userId: string;
     let adminId: string;
     let testEventId: string;
+    const eventService = new EventService();
 
     await t.step("Setup Usuários e Evento de Teste", async () => {
       const userCreds = await createTestUser("USER", "ticket.buyer@test.com");
@@ -24,8 +25,8 @@ Deno.test({
       adminId = adminCreds.user._id.toString();
 
       // Criar evento de teste limitado a 1 ingresso
-      const event = await createEventService(
-        {
+      const event = await eventService.createEvent({
+        input: {
           title: "Show Exclusivo de Teste",
           description: "Apenas 1 ingresso disponível",
           date: "2026-12-31T23:59:59.000Z",
@@ -33,9 +34,9 @@ Deno.test({
           category: "CONCERT",
           price: 300,
           totalTickets: 1,
+          creatorId: adminId,
         },
-        adminId
-      );
+      });
 
       testEventId = event.id;
     });

@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import throwlhosPkg from "throwlhos";
 import {
   checkRequiredFields,
   validateEmail,
@@ -10,6 +11,8 @@ import { AuthService } from "../services/authService.ts";
 import { IUserRepository } from "../repositories/IUserRepository.ts";
 import { UserRepository } from "../repositories/UserRepository.ts";
 
+const throwlhos = throwlhosPkg.default || throwlhosPkg;
+
 export class AuthController {
   private authService: AuthService;
 
@@ -17,7 +20,11 @@ export class AuthController {
     this.authService = new AuthService(userRepo);
   }
 
-  register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  register = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { name, email, password, role } = req.body;
 
@@ -26,11 +33,13 @@ export class AuthController {
       validateEmail(email);
       validateString(password, "password");
 
-      const result = await this.authService.registerUser({
-        name,
-        email,
-        password,
-        role,
+      const result = await this.authService.register({
+        input: {
+          name,
+          email,
+          password,
+          role,
+        },
       });
 
       const resRes = res as ResponserResponse;
@@ -50,7 +59,11 @@ export class AuthController {
     }
   };
 
-  login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  login = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { email, password } = req.body;
 
@@ -58,7 +71,12 @@ export class AuthController {
       validateEmail(email);
       validateString(password, "password");
 
-      const result = await this.authService.loginUser({ email, password });
+      const result = await this.authService.login({
+        input: {
+          email,
+          password,
+        },
+      });
 
       const resRes = res as ResponserResponse;
       if (typeof resRes.send_ok === "function") {
@@ -77,14 +95,22 @@ export class AuthController {
     }
   };
 
-  refreshToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  refreshToken = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { refreshToken } = req.body;
 
       checkRequiredFields({ refreshToken });
       validateString(refreshToken, "refreshToken");
 
-      const result = await this.authService.refreshAccessToken(refreshToken);
+      const result = await this.authService.refreshAccessToken({
+        input: {
+          refreshToken,
+        },
+      });
 
       const resRes = res as ResponserResponse;
       if (typeof resRes.send_ok === "function") {
@@ -103,14 +129,24 @@ export class AuthController {
     }
   };
 
-  me = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  me = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const authReq = req as AuthenticatedRequest;
       if (!authReq.user || !authReq.user.id) {
-        throw new Error("User context missing in request");
+        throw throwlhos.err_unauthorized("User context missing in request", {
+          context: "authReq.user",
+        });
       }
 
-      const userProfile = await this.authService.getUserProfile(authReq.user.id);
+      const userProfile = await this.authService.getUserById({
+        input: {
+          userId: authReq.user.id,
+        },
+      });
 
       const resRes = res as ResponserResponse;
       if (typeof resRes.send_ok === "function") {

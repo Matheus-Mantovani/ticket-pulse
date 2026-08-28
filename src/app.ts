@@ -34,10 +34,10 @@ app.get("/health", (_req: Request, res: Response) => {
 // Swagger UI Documentation Route
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// API Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/events", eventRoutes);
-app.use("/api/tickets", ticketRoutes);
+// API Routes registrando routers diretamente com caminhos completos
+app.use(authRoutes);
+app.use(eventRoutes);
+app.use(ticketRoutes);
 
 // Centralized Error Handling Middleware (must be registered last)
 app.use(errorHandler);

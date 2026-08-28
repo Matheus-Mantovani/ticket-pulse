@@ -110,16 +110,4 @@ export class TicketService {
     const tickets = await this.ticketRepo.findByUser(userId);
     return tickets.map(toTicketDTO);
   }
-
-  // [TEMPORÁRIO - REMOVER NA ETAPA 4] Retrocompatibilidade temporária para controllers existentes
-  purchaseTicketService(eventId: string, userId: string) {
-    return this.purchaseTicket({ input: { eventId, userId } });
-  }
-
-  getUserTicketsService(userId: string) {
-    return this.getUserTickets({ input: { userId } });
-  }
 }
-
-// [TEMPORÁRIO - REMOVER NA ETAPA 4] Export de instância default para controllers legados
-export const defaultTicketService = new TicketService();

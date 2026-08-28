@@ -4,10 +4,10 @@ import { authMiddleware } from "../middlewares/authMiddleware.ts";
 
 const router = Router();
 
-// Endpoint de compra atômica de ingressos (Protegido por JWT)
-router.post("/purchase", authMiddleware, defaultTicketController.purchaseTicket);
+// Endpoint de compra atômica de ingressos com caminho absoluto completo
+router.post("/api/tickets/purchase", authMiddleware, defaultTicketController.purchase);
 
-// Endpoint de consulta dos ingressos do usuário autenticado (Protegido por JWT)
-router.get("/my-tickets", authMiddleware, defaultTicketController.getUserTickets);
+// Endpoint de consulta dos ingressos do usuário autenticado com caminho absoluto completo
+router.get("/api/tickets/my-tickets", authMiddleware, defaultTicketController.myTickets);
 
 export default router;

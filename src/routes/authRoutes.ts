@@ -4,12 +4,12 @@ import { authMiddleware } from "../middlewares/authMiddleware.ts";
 
 const router = Router();
 
-// Rotas públicas
-router.post("/register", defaultAuthController.register);
-router.post("/login", defaultAuthController.login);
-router.post("/refresh", defaultAuthController.refreshToken);
+// Rotas públicas com caminhos absolutos completos
+router.post("/api/auth/register", defaultAuthController.register);
+router.post("/api/auth/login", defaultAuthController.login);
+router.post("/api/auth/refresh", defaultAuthController.refreshToken);
 
-// Rota protegida por autenticação JWT Bearer
-router.get("/me", authMiddleware, defaultAuthController.me);
+// Rota protegida por autenticação JWT Bearer com caminho absoluto completo
+router.get("/api/auth/me", authMiddleware, defaultAuthController.me);
 
 export default router;

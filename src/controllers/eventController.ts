@@ -21,14 +21,21 @@ export class EventController {
     this.eventService = new EventService(eventRepo);
   }
 
-  createEvent = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  create = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const authReq = req as AuthenticatedRequest;
       if (!authReq.user || !authReq.user.id) {
-        throw throwlhos.err_unauthorized("Authentication required");
+        throw throwlhos.err_unauthorized("Authentication required", {
+          context: "authReq.user",
+        });
       }
 
-      const { title, description, date, location, category, price, totalTickets } = req.body;
+      const { title, description, date, location, category, price, totalTickets } =
+        req.body;
 
       checkRequiredFields({ title, date, location, price, totalTickets });
       validateString(title, "title");
@@ -38,11 +45,13 @@ export class EventController {
       validatePositiveNumber(totalTickets, "totalTickets");
 
       if (Number(totalTickets) < 1) {
-        throw throwlhos.err_badRequest("totalTickets must be at least 1");
+        throw throwlhos.err_badRequest("totalTickets must be at least 1", {
+          totalTickets,
+        });
       }
 
-      const event = await this.eventService.createEventService(
-        {
+      const event = await this.eventService.createEvent({
+        input: {
           title,
           description,
           date,
@@ -50,9 +59,9 @@ export class EventController {
           category,
           price: Number(price),
           totalTickets: Number(totalTickets),
+          creatorId: authReq.user.id,
         },
-        authReq.user.id
-      );
+      });
 
       const resRes = res as ResponserResponse;
       if (typeof resRes.send_created === "function") {
@@ -71,9 +80,15 @@ export class EventController {
     }
   };
 
-  getAllEvents = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  list = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      const result = await this.eventService.getAllEventsService(req.query);
+      const result = await this.eventService.listEvents({
+        input: req.query,
+      });
 
       const resRes = res as ResponserResponse;
       if (typeof resRes.send_ok === "function") {
@@ -92,10 +107,16 @@ export class EventController {
     }
   };
 
-  getEventById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { id } = req.params;
-      const event = await this.eventService.getEventByIdService(id);
+      const event = await this.eventService.getEventById({
+        input: { id },
+      });
 
       const resRes = res as ResponserResponse;
       if (typeof resRes.send_ok === "function") {
@@ -114,22 +135,36 @@ export class EventController {
     }
   };
 
-  updateEvent = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  update = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { id } = req.params;
       const { title, date, price, totalTickets } = req.body;
 
-      if (title !== undefined) validateString(title, "title");
-      if (date !== undefined) validateFutureDate(date, "date");
-      if (price !== undefined) validatePositiveNumber(price, "price");
+      if (title !== undefined) {
+        validateString(title, "title");
+      }
+      if (date !== undefined) {
+        validateFutureDate(date, "date");
+      }
+      if (price !== undefined) {
+        validatePositiveNumber(price, "price");
+      }
       if (totalTickets !== undefined) {
         validatePositiveNumber(totalTickets, "totalTickets");
         if (Number(totalTickets) < 1) {
-          throw throwlhos.err_badRequest("totalTickets must be at least 1");
+          throw throwlhos.err_badRequest("totalTickets must be at least 1", {
+            totalTickets,
+          });
         }
       }
 
-      const updatedEvent = await this.eventService.updateEventService(id, req.body);
+      const updatedEvent = await this.eventService.updateEvent({
+        input: { id, data: req.body },
+      });
 
       const resRes = res as ResponserResponse;
       if (typeof resRes.send_ok === "function") {
@@ -148,26 +183,40 @@ export class EventController {
     }
   };
 
-  deleteEvent = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  delete = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { id } = req.params;
-      await this.eventService.deleteEventService(id);
+      await this.eventService.deleteEvent({
+        input: { id },
+      });
 
       const resRes = res as ResponserResponse;
       if (typeof resRes.send_ok === "function") {
-        resRes.send_ok("Event deleted successfully");
+        resRes.send_ok("Event deleted successfully", { id });
       } else {
         res.status(200).json({
           status: "OK",
           code: 200,
           success: true,
           message: "Event deleted successfully",
+          data: { id },
         });
       }
     } catch (error) {
       next(error);
     }
   };
+
+  // [TEMPORÁRIO - REMOVER NA ETAPA 6] Aliases para manter os testes unitários legados funcionando até a Etapa 6
+  createEvent = this.create;
+  getAllEvents = this.list;
+  getEventById = this.getById;
+  updateEvent = this.update;
+  deleteEvent = this.delete;
 }
 
 export const defaultEventController = new EventController();
