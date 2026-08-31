@@ -31,6 +31,24 @@ const swaggerOptions: swaggerJsdoc.Options = {
         description: "Servidor Local de Desenvolvimento",
       },
     ],
+    tags: [
+      {
+        name: "Health",
+        description: "Verificação de integridade da API",
+      },
+      {
+        name: "Auth",
+        description: "Autenticação e gerenciamento de sessões JWT",
+      },
+      {
+        name: "Events",
+        description: "Gerenciamento e consulta de eventos",
+      },
+      {
+        name: "Tickets",
+        description: "Compra atômica e consulta de ingressos",
+      },
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -46,6 +64,14 @@ const swaggerOptions: swaggerJsdoc.Options = {
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
+// Opções de personalização da interface do Swagger UI
+const swaggerUiOptions = {
+  swaggerOptions: {
+    displayRequestDuration: true,
+    defaultModelsExpandDepth: -1, // Oculta a seção de schemas genéricos no rodapé
+  },
+};
+
 // Global Middlewares
 app.use(cors());
 app.use(express.json());
@@ -54,7 +80,11 @@ app.use(responser);
 app.use(throwlhos.middleware);
 
 // Swagger UI Documentation Route (dinâmico via swagger-jsdoc)
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, swaggerUiOptions),
+);
 
 // API Routes registrando routers diretamente com caminhos absolutos completos
 app.use(healthRoutes);
