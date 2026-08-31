@@ -18,6 +18,8 @@
     "@types/bcryptjs": "npm:@types/bcryptjs@^2.4.6",
     "swagger-ui-express": "npm:swagger-ui-express@^5.0.0",
     "@types/swagger-ui-express": "npm:@types/swagger-ui-express@^4.1.6",
+    "swagger-jsdoc": "npm:swagger-jsdoc@^6.2.8",
+    "@types/swagger-jsdoc": "npm:@types/swagger-jsdoc@^6.0.4",
     "supertest": "npm:supertest@^7.0.0",
     "@types/supertest": "npm:@types/supertest@^6.0.2",
     "@std/assert": "jsr:@std/assert@^1.0.0"

@@ -20,7 +20,31 @@
               "path": ["health"]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/health",
+                  "host": ["{{base_url}}"],
+                  "path": ["health"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"service\": \"TicketPulse API\",\n  \"timestamp\": \"2026-08-31T12:00:00.000Z\"\n}"
+            }
+          ]
         }
       ]
     },
@@ -47,7 +71,40 @@
               "path": ["api", "auth", "register"]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Usuário Teste\",\n  \"email\": \"user@example.com\",\n  \"password\": \"senha123456\",\n  \"role\": \"USER\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/register",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "auth", "register"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"status\": \"created\",\n  \"code\": 201,\n  \"success\": true,\n  \"message\": \"User registered successfully\",\n  \"data\": {\n    \"id\": \"609052d091e0c48fa44184f1\",\n    \"name\": \"Usuário Teste\",\n    \"email\": \"user@example.com\",\n    \"role\": \"USER\",\n    \"createdAt\": \"2026-08-31T12:00:00.000Z\"\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Register Admin",
@@ -69,7 +126,40 @@
               "path": ["api", "auth", "register"]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Administrador\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"admin123456\",\n  \"role\": \"ADMIN\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/register",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "auth", "register"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"status\": \"created\",\n  \"code\": 201,\n  \"success\": true,\n  \"message\": \"User registered successfully\",\n  \"data\": {\n    \"id\": \"609052d091e0c48fa44184f2\",\n    \"name\": \"Administrador\",\n    \"email\": \"admin@example.com\",\n    \"role\": \"ADMIN\",\n    \"createdAt\": \"2026-08-31T12:00:00.000Z\"\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Login",
@@ -110,7 +200,40 @@
               "path": ["api", "auth", "login"]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"admin123456\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "auth", "login"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"code\": 200,\n  \"success\": true,\n  \"message\": \"Authentication successful\",\n  \"data\": {\n    \"user\": {\n      \"id\": \"609052d091e0c48fa44184f2\",\n      \"name\": \"Administrador\",\n      \"email\": \"admin@example.com\",\n      \"role\": \"ADMIN\"\n    },\n    \"token\": \"eyJhbGciOiJIUzI1Ni...\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1Ni...\"\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Refresh Token",
@@ -132,7 +255,40 @@
               "path": ["api", "auth", "refresh"]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/refresh",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "auth", "refresh"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"code\": 200,\n  \"success\": true,\n  \"message\": \"Access token renewed successfully\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1Ni...\"\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Get Authenticated Profile (Me)",
@@ -155,7 +311,31 @@
               "path": ["api", "auth", "me"]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/auth/me",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "auth", "me"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"code\": 200,\n  \"success\": true,\n  \"message\": \"User profile retrieved\",\n  \"data\": {\n    \"id\": \"609052d091e0c48fa44184f2\",\n    \"name\": \"Administrador\",\n    \"email\": \"admin@example.com\",\n    \"role\": \"ADMIN\"\n  }\n}"
+            }
+          ]
         }
       ]
     },
@@ -179,16 +359,35 @@
                 {
                   "key": "limit",
                   "value": "10"
-                },
-                {
-                  "key": "search",
-                  "value": "",
-                  "disabled": true
                 }
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/events?page=1&limit=10",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "events"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"code\": 200,\n  \"success\": true,\n  \"message\": \"Events retrieved successfully\",\n  \"data\": {\n    \"events\": [\n      {\n        \"id\": \"609052d091e0c48fa44184f3\",\n        \"title\": \"Rock in Rio 2026\",\n        \"description\": \"Maior festival de música do mundo\",\n        \"date\": \"2026-11-20T20:00:00.000Z\",\n        \"location\": \"Rio de Janeiro, RJ\",\n        \"price\": 350,\n        \"totalTickets\": 100,\n        \"availableTickets\": 100\n      }\n    ],\n    \"pagination\": {\n      \"total\": 1,\n      \"page\": 1,\n      \"limit\": 10,\n      \"totalPages\": 1\n    }\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Get Event By ID (Public)",
@@ -201,7 +400,31 @@
               "path": ["api", "events", "{{event_id}}"]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/events/609052d091e0c48fa44184f3",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "events", "609052d091e0c48fa44184f3"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"code\": 200,\n  \"success\": true,\n  \"message\": \"Event retrieved successfully\",\n  \"data\": {\n    \"id\": \"609052d091e0c48fa44184f3\",\n    \"title\": \"Rock in Rio 2026\",\n    \"description\": \"Maior festival de música do mundo\",\n    \"date\": \"2026-11-20T20:00:00.000Z\",\n    \"location\": \"Rio de Janeiro, RJ\",\n    \"price\": 350,\n    \"totalTickets\": 100,\n    \"availableTickets\": 100\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Create Event (Admin Only)",
@@ -239,7 +462,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Rock in Rio 2026\",\n  \"description\": \"Maior festival de música do mundo\",\n  \"date\": \"2026-11-20T20:00:00.000Z\",\n  \"location\": \"Rio de Janeiro, RJ\",\n  \"category\": \"CONCERT\",\n  \"price\": 350.0,\n  \"totalTickets\": 100\n}"
+              "raw": "{\n  \"title\": \"Rock in Rio 2026\",\n  \"description\": \"Maior festival de música do mundo\",\n  \"date\": \"2026-11-20T20:00:00.000Z\",\n  \"location\": \"Rio de Janeiro, RJ\",\n  \"price\": 350.0,\n  \"totalTickets\": 100\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/events",
@@ -247,7 +470,40 @@
               "path": ["api", "events"]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Rock in Rio 2026\",\n  \"description\": \"Maior festival de música do mundo\",\n  \"date\": \"2026-11-20T20:00:00.000Z\",\n  \"location\": \"Rio de Janeiro, RJ\",\n  \"price\": 350.0,\n  \"totalTickets\": 100\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/events",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "events"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"status\": \"created\",\n  \"code\": 201,\n  \"success\": true,\n  \"message\": \"Event created successfully\",\n  \"data\": {\n    \"id\": \"609052d091e0c48fa44184f3\",\n    \"title\": \"Rock in Rio 2026\",\n    \"description\": \"Maior festival de música do mundo\",\n    \"date\": \"2026-11-20T20:00:00.000Z\",\n    \"location\": \"Rio de Janeiro, RJ\",\n    \"price\": 350,\n    \"totalTickets\": 100,\n    \"availableTickets\": 100\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Update Event (Admin Only)",
@@ -279,7 +535,40 @@
               "path": ["api", "events", "{{event_id}}"]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Rock in Rio 2026 - Edição VIP\",\n  \"price\": 400.0\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/events/609052d091e0c48fa44184f3",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "events", "609052d091e0c48fa44184f3"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"code\": 200,\n  \"success\": true,\n  \"message\": \"Event updated successfully\",\n  \"data\": {\n    \"id\": \"609052d091e0c48fa44184f3\",\n    \"title\": \"Rock in Rio 2026 - Edição VIP\",\n    \"price\": 400\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Delete Event (Admin Only)",
@@ -302,7 +591,31 @@
               "path": ["api", "events", "{{event_id}}"]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/events/609052d091e0c48fa44184f3",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "events", "609052d091e0c48fa44184f3"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"code\": 200,\n  \"success\": true,\n  \"message\": \"Event deleted successfully\",\n  \"data\": null\n}"
+            }
+          ]
         }
       ]
     },
@@ -339,7 +652,40 @@
               "path": ["api", "tickets", "purchase"]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"eventId\": \"609052d091e0c48fa44184f3\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/tickets/purchase",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "tickets", "purchase"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"status\": \"created\",\n  \"code\": 201,\n  \"success\": true,\n  \"message\": \"Ticket purchased successfully\",\n  \"data\": {\n    \"id\": \"609052d091e0c48fa44184f4\",\n    \"eventId\": \"609052d091e0c48fa44184f3\",\n    \"userId\": \"609052d091e0c48fa44184f1\",\n    \"ticketCode\": \"TCK-A1B2C3D4E5\",\n    \"purchasePrice\": 350,\n    \"purchasedAt\": \"2026-08-31T12:00:00.000Z\"\n  }\n}"
+            }
+          ]
         },
         {
           "name": "My Tickets (Protected)",
@@ -362,7 +708,31 @@
               "path": ["api", "tickets", "my-tickets"]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/tickets/my-tickets",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "tickets", "my-tickets"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"code\": 200,\n  \"success\": true,\n  \"message\": \"User tickets retrieved successfully\",\n  \"data\": [\n    {\n      \"id\": \"609052d091e0c48fa44184f4\",\n      \"eventId\": {\n        \"id\": \"609052d091e0c48fa44184f3\",\n        \"title\": \"Rock in Rio 2026\",\n        \"location\": \"Rio de Janeiro, RJ\",\n        \"date\": \"2026-11-20T20:00:00.000Z\"\n      },\n      \"ticketCode\": \"TCK-A1B2C3D4E5\",\n      \"purchasePrice\": 350,\n      \"purchasedAt\": \"2026-08-31T12:00:00.000Z\"\n    }\n  ]\n}"
+            }
+          ]
         }
       ]
     }
