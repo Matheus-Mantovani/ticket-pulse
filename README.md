@@ -26,8 +26,8 @@ O **TicketPulse** é uma API RESTful para gerenciamento de eventos e venda de in
 - 🔐 **Autenticação & Autorização JWT**: Cadastro de usuários, login, renovação via Refresh Token e controle de acesso baseado em perfis (RBAC - `ADMIN` vs `USER`).
 - 📅 **CRUD Completo de Eventos**: Criação, edição, busca paginada com filtros por categoria/título e exclusão de eventos (Restrito a `ADMIN`).
 - ⚡ **Operação Atômica ACID Multi-Documento**: Fluxo de compra de ingressos com decremento de estoque e emissão de bilhete único executado dentro de uma sessão `session.startTransaction()` do MongoDB Atlas.
-- 📦 **Padrão de Resposta JSON & Tratamento de Erros**: Respostas HTTP padronizadas (`responser`) e middleware centralizado de exceções (`throwlhos`).
-- 📄 **Documentação Interativa Publicada**: Swagger UI exposto na rota `/api-docs` e Coleção Postman exportada com script automático de captura de JWT.
+- 📦 **Padrão de Resposta JSON & Tratamento de Erros**: Respostas HTTP padronizadas (`responser`) e middleware centralizado de exceções (`throwlhos`) enriquecidos com metadados de contexto para depuração.
+- 📄 **Documentação Interativa Publicada**: Swagger UI exposto na rota `/api-docs` (via JSDoc `@openapi`) e Coleção Postman exportada com script automático de captura de JWT e exemplos de resposta salvos.
 
 ---
 
@@ -65,13 +65,13 @@ O **TicketPulse** é uma API RESTful para gerenciamento de eventos e venda de in
     deno task start
     ```
 
-- **Execute os Testes Automatizados**:
+- **Execute os Testes Automatizados & Linter**:
     ```bash
     # Executar toda a suíte de testes (Unitários + Integração E2E - 33 cenários)
     deno task test
     
-    # Executar apenas testes unitários dos controllers (Mocks sem await)
-    deno test tests/unit/
+    # Executar a verificação estática do linter (0 erros)
+    deno lint
     ```
 
 ---
@@ -83,10 +83,10 @@ A aplicação integra rigorosamente os 5 pacotes obrigatórios da especificaçã
 | Pacote | Função no Projeto | Arquivo de Implementação / Exemplo de Código |
 | :--- | :--- | :--- |
 | **`npm:morgan`** | Logging detalhado de todas as requisições HTTP recebidas no terminal. | [`src/app.ts`](src/app.ts)<br>`app.use(morgan("dev"));` |
-| **`npm:responser`** | Padronização do contrato de respostas JSON (`status`, `code`, `success`, `message`, `data`). | [`src/app.ts`](src/app.ts) & Controllers<br>`app.use(responser);`<br>`res.send_created("Message", data)` |
+| **`npm:responser`** | Padronização do contrato de respostas JSON (`status`, `code`, `success`, `message`, `data`). | [`src/app.ts`](src/app.ts) & Controllers<br>`app.use(responser);`<br>`res.send_created("Message", data, { metadata })` |
 | **`npm:request-check`** | Validação estrita de presença e obrigatoriedade de campos no payload HTTP. | [`src/utils/validation.ts`](src/utils/validation.ts)<br>`checkRequiredFields({ name, email, password })` |
-| **`npm:throwlhos`** | Lançamento e captura centralizada de exceções HTTP (`badRequest`, `unauthorized`, `notFound`). | [`src/utils/validation.ts`](src/utils/validation.ts) & [`src/middlewares/errorHandler.ts`](src/middlewares/errorHandler.ts)<br>`throw throwlhos.err_badRequest("Missing required fields")` |
-| **`jsr:@zarco/isness`** | Checagem e asserção de tipos (validação de e-mail, datas futuras, números positivos). | [`src/utils/validation.ts`](src/utils/validation.ts)<br>`is.email(email)`, `is.number(price)`, `is.date(date)` |
+| **`npm:throwlhos`** | Lançamento e captura centralizada de exceções HTTP (`badRequest`, `unauthorized`, `notFound`) com metadados. | [`src/utils/validation.ts`](src/utils/validation.ts) & [`src/middlewares/errorHandler.ts`](src/middlewares/errorHandler.ts)<br>`throw throwlhos.err_badRequest("Missing fields", { fields })` |
+| **`jsr:@zarco/isness`** | Checagem e asserção de tipos (validação de e-mail, datas futuras, números positivos). | [`src/utils/validation.ts`](src/utils/validation.ts)<br>`import * as is from "@zarco/isness";`<br>`is.email(email)`, `is.number(price)` |
 
 ---
 
