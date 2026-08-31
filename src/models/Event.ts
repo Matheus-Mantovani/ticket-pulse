@@ -124,19 +124,19 @@ export function toEventDTO(event: IEvent): EventDTO {
 }
 
 export class Event {
-  _id!: mongoose.Types.ObjectId;
-  title!: string;
-  description?: string | null;
-  date!: Date;
-  location!: string;
-  category!: EventCategory;
-  price!: number;
-  totalTickets!: number;
-  availableTickets!: number;
-  status!: EventStatus;
-  createdBy!: mongoose.Types.ObjectId;
-  createdAt!: Date;
-  updatedAt!: Date;
+  _id!: IEvent["_id"];
+  title!: IEvent["title"];
+  description?: IEvent["description"];
+  date!: IEvent["date"];
+  location!: IEvent["location"];
+  category!: IEvent["category"];
+  price!: IEvent["price"];
+  totalTickets!: IEvent["totalTickets"];
+  availableTickets!: IEvent["availableTickets"];
+  status!: IEvent["status"];
+  createdBy!: IEvent["createdBy"];
+  createdAt!: IEvent["createdAt"];
+  updatedAt!: IEvent["updatedAt"];
 
   get isAvailable(): boolean {
     return this.availableTickets > 0 && this.status === "ACTIVE";

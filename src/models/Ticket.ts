@@ -77,14 +77,14 @@ export function toTicketDTO(ticket: ITicket): TicketDTO {
 }
 
 export class Ticket {
-  _id!: mongoose.Types.ObjectId;
-  event!: mongoose.Types.ObjectId;
-  user!: mongoose.Types.ObjectId;
-  ticketCode!: string;
-  purchasePrice!: number;
-  purchasedAt!: Date;
-  createdAt!: Date;
-  updatedAt!: Date;
+  _id!: ITicket["_id"];
+  event!: ITicket["event"];
+  user!: ITicket["user"];
+  ticketCode!: ITicket["ticketCode"];
+  purchasePrice!: ITicket["purchasePrice"];
+  purchasedAt!: ITicket["purchasedAt"];
+  createdAt!: ITicket["createdAt"];
+  updatedAt!: ITicket["updatedAt"];
 
   toTicketDTO(): TicketDTO {
     return {

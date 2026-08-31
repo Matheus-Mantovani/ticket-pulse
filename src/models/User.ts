@@ -81,12 +81,14 @@ export function toUserDTO(user: IUser): UserDTO {
 }
 
 export class User {
-  _id!: mongoose.Types.ObjectId;
-  name!: string;
-  email!: string;
-  role!: UserRole;
-  createdAt!: Date;
-  updatedAt!: Date;
+  _id!: IUser["_id"];
+  name!: IUser["name"];
+  email!: IUser["email"];
+  password?: IUser["password"];
+  role!: IUser["role"];
+  refreshToken?: IUser["refreshToken"];
+  createdAt!: IUser["createdAt"];
+  updatedAt!: IUser["updatedAt"];
 
   toUserDTO(): UserDTO {
     return {
